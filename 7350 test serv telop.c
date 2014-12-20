@@ -65,7 +65,7 @@ task main()
 		getJoystickSettings(joystick);  // Update Buttons and Joysticks
 		if (abs(joystick.joy1_y1) > threshold)
 		{
-			motor[frontRight]= joystick.joy1_y1;
+			motor[frontRight]= pow(joystick.joy1_y1,2);
 		}
 		else
 		{
