@@ -57,7 +57,7 @@ task main()
 	initializeRobot();
 	int frontRServ = 120;
 	int threshold = 30;
-	int xthreshold = 90;
+//	int xthreshold = 90;
 	waitForStart();   // wait for start of tele-op phase
 
 	while (true)
@@ -96,19 +96,20 @@ task main()
 		//
 		//   Serv function
 		//
-		if (abs(joystick.joy1_x1) > xthreshold)
+		//if (abs(joystick.joy1_x1) > xthreshold)
 		{
-			if ((joystick.joy1_x1 > xthreshold) && (frontRServ < 250))
-			{
-				frontRServ += 1;
-				servo[frontRS]= frontRServ;
-				wait1Msec(3);
-			}
-			if ((joystick.joy1_x1 < -xthreshold) && (frontRServ > 1))
-			{
-				frontRServ -= 1;
-				servo[frontRS]= frontRServ;
-				wait1Msec(3);
+		//	if ((joystick.joy1_x1 > xthreshold) && (frontRServ < 250))
+				{
+		//			frontRServ += 1;
+		//			servo[frontRS]= frontRServ;
+		//			wait1Msec(3);
+				}
+		//	if ((joystick.joy1_x1 < -xthreshold) && (frontRServ > 1))
+				{
+		//			frontRServ -= 1;
+		//			servo[frontRS]= frontRServ;
+		//			wait1Msec(3);
+				}
 			}
 		}
 	}
