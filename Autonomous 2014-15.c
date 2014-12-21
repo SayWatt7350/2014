@@ -22,20 +22,20 @@ task main()
 
 	while(SensorRaw[irsensor]==5);
 	{
-		motor[right]=speed;
-		motor[left]=speed;
+		motor[Right]=speed;
+		motor[Left]=speed;
 	}
 
 	while(SensorRaw[irsensor]<5);
 	{
-		motor[right]=speed;
-		motor[left]=-speed;
+		motor[Right]=speed;
+		motor[Left]=-speed;
 	}
 
 		while(SensorRaw[irsensor]==5);
 	{
-		motor[right]=-speed;
-		motor[left]=speed;
+		motor[Right]=-speed;
+		motor[Left]=speed;
 	}
 
 
