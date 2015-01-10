@@ -1,0 +1,11 @@
+Forward
+
+back left (Front rs)135
+Front Left (BAck RS)129
+Front Right (Front LS)134
+Back Right (Back LS)138
+
+45 Degree Angles
+
+86
+150
