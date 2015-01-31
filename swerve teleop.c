@@ -15,7 +15,7 @@
 #pragma config(Servo,  srvo_S1_C3_5,    basketlifter,         tServoStandard)
 #pragma config(Servo,  srvo_S1_C3_6,    score,                tServoStandard)
 #pragma config(Servo,  srvo_S2_C2_1,    frontLS,              tServoStandard)
-#pragma config(Servo,  srvo_S2_C2_2,    backLS,              tServoStandard)
+#pragma config(Servo,  srvo_S2_C2_2,    backLS,               tServoStandard)
 #pragma config(Servo,  srvo_S2_C2_3,    lock,                 tServoStandard)
 #pragma config(Servo,  srvo_S2_C2_4,    gate,                 tServoStandard)
 #pragma config(Servo,  srvo_S2_C2_5,    servo11,              tServoNone)
@@ -26,7 +26,9 @@
 const int DEADZONE = 25;
 const int MAX_MOTOR_VAL = 100;
 const float MAX_JOY_VAL = 127.0;
-
+//frontleft
+//backleft
+//
 //servo values
 const int frontRS180 = 135;
 const int backRS180 = 129;
@@ -67,7 +69,7 @@ task main()
 	int sa2;
 	int sa3;
 	int sa4;
-*/
+	*/
 	int FWDval;//forard motion of the robot
 	int LRval;//left/right motion of the robot
 	int RCWval;//rotational value of the robot
@@ -119,11 +121,15 @@ task main()
 	servo[lock] = lockup;
 	servo[gate] = gateup;
 
+	servo[frontRS] = frontRS180;
+	servo[backRS] = backRS180;
+	servo[frontLS] = frontLS180;
+	servo[backLS] = backLS180;
 
 	waitForStart();
 	while(true)
 	{
-		/*		getJoystickSettings(joystick); //Constantly updates values on the joystick
+		/*getJoystickSettings(joystick); //Constantly updates values on the joystick
 		//Right Wheel
 		if(abs(joystick.joy1_y2) > threshold)
 		{
@@ -148,8 +154,8 @@ task main()
 		}
 		*/
 
-		motor[LeftFront] = scaleForMotor(joystick.joy1_y1);
-		motor[LeftBack] = scaleForMotor(joystick.joy1_y1);
+		//		motor[LeftFront] = scaleForMotor(joystick.joy1_y1);
+		//		motor[LeftBack] = scaleForMotor(joystick.joy1_y1);
 		//distance from 0,0 is speed
 		//angle is the ange of the servos
 
@@ -169,7 +175,7 @@ task main()
 			atan(abs(joystick.joy1_y1/joystick.joy1_x1))
 
 			*/
-			servoangle=atan(abs(joystick.joy1_y1/joystick.joy1_x1));
+			/*			servoangle=atan(abs(joystick.joy1_y1/joystick.joy1_x1));
 
 			servo[frontRS] = servoangle;
 			servo[backRS] = servoangle;
@@ -179,136 +185,137 @@ task main()
 			motor[LeftBack] = scaleForMotor(joystick.joy1_y2);
 			motor[RightFront] =  scaleForMotor(joystick.joy1_y2);
 			motor[RightBack] =  scaleForMotor(joystick.joy1_y2);
-		}
-		else 	if(abs(joystick.joy1_x2)>DEADZONE &&  //only care about x value
-			/*this is so it doesn't go forward and rotate at the same time*/!(abs(joystick.joy1_y1)>DEADZONE && abs(joystick.joy1_x1)>DEADZONE))
-		{
+			}
+			else 	if(abs(joystick.joy1_x2)>DEADZONE &&  //only care about x value
+			/*this is so it doesn't go forward and rotate at the same time*//*!(abs(joystick.joy1_y1)>DEADZONE && abs(joystick.joy1_x1)>DEADZONE))
+			{
 			servo[frontRS] = frontRS45;
 			servo[backRS] = backRS45;
 			servo[frontLS] = frontLS45;
 			servo[backLS] = backLS45;
-			motor[LeftFront] = scaleForMotor(joystick.joy1_x2);
-			motor[LeftBack] = scaleForMotor(joystick.joy1_x2);
+			motor[LeftFront] = -scaleForMotor(joystick.joy1_x2);
+			motor[LeftBack] = -scaleForMotor(joystick.joy1_x2);
 			motor[RightFront] =  scaleForMotor(joystick.joy1_x2);
 			motor[RightBack] =  scaleForMotor(joystick.joy1_x2);
-		}
-		else if(abs(joystick.joy1_x2)>DEADZONE && (abs(joystick.joy1_y1)>DEADZONE && abs(joystick.joy1_x1)>DEADZONE))
-			//pseudocode for this was takedn from Ether on chief delphi
-		//http://www.chiefdelphi.com/media/papers/2426
-		{
-			FWDval = -scaleForMotor(joystick.joy1_y2);
-			LRval = scaleForMotor(joystick.joy1_x1);
-			RCWval = scaleForMotor(joystick.joy1_x2);
+			}
+			else */if(abs(joystick.joy1_x2)>DEADZONE && (abs(joystick.joy1_y1)>DEADZONE && abs(joystick.joy1_x1)>DEADZONE))
+				//pseudocode for this was takedn from Ether on chief delphi
+			//http://www.chiefdelphi.com/media/papers/2426
+			{
+				FWDval = -scaleForMotor(joystick.joy1_y2);
+				LRval = scaleForMotor(joystick.joy1_x1);
+				RCWval = scaleForMotor(joystick.joy1_x2);
 
-			A = LRval -RCWval*(L/R);
-			B = LRval +RCWval*(L/R);
-			C =FWDval-RCWval*(W/R);
-			D =FWDval+RCWval*(W/R);
+				A = LRval -RCWval*(L/R);
+				B = LRval +RCWval*(L/R);
+				C =FWDval-RCWval*(W/R);
+				D =FWDval+RCWval*(W/R);
 
-			servo[frontRS] = sqrt(B^2+C^2);
-			servo[frontLS] = sqrt(B^2+D^2);
-			servo[backLS]  = sqrt(A^2+D^2);
-			servo[backRS]  = sqrt(A^2+C^2);
-			motor[RightFront] = atan2(B,C)*180/PI;
-			motor[LeftFront] = atan2(B,D)*180/PI;
-			motor[LeftBack] = atan2(A,D)*180/PI;
-			motor[LeftFront] = atan2(A,C)*180/PI;
+				servo[frontRS] = sqrt(B^2+C^2);
+				servo[frontLS] = sqrt(B^2+D^2);
+				servo[backLS]  = sqrt(A^2+D^2);
+				servo[backRS]  = sqrt(A^2+C^2);
+				motor[RightFront] = atan2(B,C)*180/PI;
+				motor[LeftFront] = atan2(B,D)*180/PI;
+				motor[LeftBack] = atan2(A,D)*180/PI;
+				motor[LeftFront] = atan2(A,C)*180/PI;
 
-		}
-		else
-		{
-			motor[LeftFront] = 0;
-			motor[LeftBack] = 0;
-			motor[RightFront] =  0;
-			motor[RightBack] =  0;
-		}
+			}
+			else
+			{
+				motor[LeftFront] = 0;
+				motor[LeftBack] = 0;
+				motor[RightFront] =  0;
+				motor[RightBack] =  0;
+			}
 
-		// Mandible controls
-		if(joy1Btn(8))
-		{
+			// Mandible controls
+			if(joy1Btn(8))
+			{
 
-			servo[rightmandible] = shutR;
-			servo[leftmandible] = shutL;
-		}
-		if(joy1Btn(6))
-		{
+				servo[rightmandible] = shutR;
+				servo[leftmandible] = shutL;
+			}
+			if(joy1Btn(6))
+			{
 
-			servo[rightmandible] = openwideR;
-			servo[leftmandible] = openwideL;
-		}
+				servo[rightmandible] = openwideR;
+				servo[leftmandible] = openwideL;
+			}
 
-		// Mouth controls
+			// Mouth controls
 
-		if(joy1Btn(4))
-		{
-			servo[basketlifter]=basketup;
-			wait1Msec(30);
+			if(joy1Btn(4))
+			{
+				servo[basketlifter]=basketup;
+				wait1Msec(30);
 
-			servo[rightmandible] = openwideR;  // open mandibles so they don't hit elevator
-			servo[leftmandible] = openwideL;
-		}
-		if(joy1Btn(2))
-		{
-			servo[basketlifter]=basketdown;
-		}
+				servo[rightmandible] = openwideR;  // open mandibles so they don't hit elevator
+				servo[leftmandible] = openwideL;
+			}
+			if(joy1Btn(2))
+			{
+				servo[basketlifter]=basketdown;
+			}
 
-		/////////////    JOYSTICK 2 //////////////////
+			/////////////    JOYSTICK 2 //////////////////
 
-		//  elevator controls
+			//  elevator controls
 
-		if (joy2Btn(5))
-		{
-	//			motor[elevator1] = 100;
-		//		motor[elevator2]=100;
-		}
-		else if (joy2Btn(7))
-		{
-			//		motor[elevator1] = -100;
+			if (joy2Btn(5))
+			{
+				//			motor[elevator1] = 100;
+				//		motor[elevator2]=100;
+			}
+			else if (joy2Btn(7))
+			{
+				//		motor[elevator1] = -100;
 				//motor[elevator2]=-100;
+			}
+			else
+			{
+				motor[elevator] = 0;
+			}
+
+			// scoring
+
+			if(joy2Btn(8))
+			{
+
+				servo[score] = scoreopen;
+			}
+			else
+			{
+				servo[score]=scoreclose;
+			}
+
+			// rolling goal
+
+			if(joy2Btn(2))   // gate down to capture rolling goal
+			{
+
+				servo[gate] = gatedown;
+			}
+
+			if (joy2Btn(4))		// gate up
+			{
+				servo[lock] = lockup;
+				wait1Msec(5);
+				servo[gate] = gateup;
+
+			}
+
+			if (joy2Btn(3))		// lock on
+			{
+				servo[lock] = lockdown;
+			}
+
+			if (joy2Btn(1))     // lock up - release rolling goal
+			{
+				servo[lock] = lockup;
+			}
+
+
 		}
-		else
-		{
-			motor[elevator] = 0;
-		}
-
-		// scoring
-
-		if(joy2Btn(8))
-		{
-
-			servo[score] = scoreopen;
-		}
-		else
-		{
-			servo[score]=scoreclose;
-		}
-
-		// rolling goal
-
-		if(joy2Btn(2))   // gate down to capture rolling goal
-		{
-
-			servo[gate] = gatedown;
-		}
-
-		if (joy2Btn(4))		// gate up
-		{
-			servo[lock] = lockup;
-			wait1Msec(5);
-			servo[gate] = gateup;
-
-		}
-
-		if (joy2Btn(3))		// lock on
-		{
-			servo[lock] = lockdown;
-		}
-
-		if (joy2Btn(1))     // lock up - release rolling goal
-		{
-			servo[lock] = lockup;
-		}
-
-
 	}
 }
