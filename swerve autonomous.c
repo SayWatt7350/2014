@@ -1,9 +1,8 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  none,     none)
 #pragma config(Hubs,  S2, HTMotor,  HTMotor,  HTServo,  HTServo)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S2,     ,               sensorI2CMuxController)
+#pragma config(Sensor, S4,     HTIRS2,         sensorI2CCustom)
 #pragma config(Motor,  mtr_S1_C1_1,     RightFront,    tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C1_2,     RightBack,     tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_2,     RightBack,     tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S2_C1_1,     elevator1,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S2_C1_2,     elevator2,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S2_C2_1,     LeftFront,     tmotorTetrix, openLoop, reversed)
@@ -45,10 +44,10 @@ int sBRS = 109;
 int sFLS = 132;
 int sBLS = 131;
 
-int straight_FRS = 136;
-int straight_BRS = 146;
+int straight_FRS = 161;
+int straight_BRS = 154;
 int straight_FLS = 132;
-int straight_BLS = 134;
+int straight_BLS = 131;
 
 
 
@@ -82,8 +81,10 @@ int FLS  = 0;
 int BLS = 0;
 
 int lastservopos = 0;   // 1 = straight, 2 = spin , 3 = turn 45 deg to right, 4 = turn 45degrees to left, 5 = turn wheels to side
+int lastelevator =30;// 30=30cm, 60=60cm, 90=90cm, 120=120cm
+//elevator starts at 30cm position
 
-
+int centerpos=0;
 
 
 
@@ -182,8 +183,8 @@ void turnServos(int turnpos, int lastpos)
 	{
 		//   straight defaults
 		// define temporary variables servo default is straight.
-		int sFRS = 90;
-		int sBRS = 109;
+		int sFRS = 161;
+		int sBRS = 154;
 		int sFLS = 132;
 		int sBLS = 131;
 
@@ -204,15 +205,15 @@ void turnServos(int turnpos, int lastpos)
 		switch (turnpos)
 		{
 		case 1:							// gostraight
-			sFRS = 90;
-			sBRS = 109;
+			sFRS = 161;
+			sBRS = 154;
 			sFLS = 132;
 			sBLS = 131;
 			break;
 
 		case 2:							// spin
-			sFRS = 38;				//   						\  	u
-			sBRS = 162;				//  						/	 	u
+			sFRS = 107;				//   						\  	u
+			sBRS = 187;				//  						/	 	u
 			sFLS = 170;				//		/							u
 			sBLS = 95;				//		\							u
 			// set motors direction to help servos and turn same direction as servo.
@@ -229,31 +230,31 @@ void turnServos(int turnpos, int lastpos)
 			break;
 
 		case 3:				// 45 degree turn to right  ???
-			sFRS = 149;				//   						/
-			sBRS = 162;				//  						/
+			sFRS = 219;				//   						/
+			sBRS = 187;				//  						/
 			sFLS = 170;				//		/
 			sBLS = 168;				//	 ??? /
 			break;
 
 
 		case 4:				// 45 degree turn to left ???
-			sFRS = 38;				//   						\		u
-			sBRS = 47;				//  						\		u
+			sFRS = 107;				//   						\		u
+			sBRS = 114;				//  						\		u
 			sFLS = 100;				//		\							u
 			sBLS = 95;				//	  \							u
 			break;
 
 		case 5:				// sideways ???
-			sFRS = 202;				//   						->
-			sBRS = 218;				//  						->
+			sFRS = 49;				//   						->
+			sBRS = 80;				//  						->
 			sFLS = 255;				//		->
 			sBLS = 56;				//	  ->
 			break;
 
 		default:			// gostraight
 
-			sFRS = 90;
-			sBRS = 109;
+			sFRS = 161;
+			sBRS = 154;
 			sFLS = 132;
 			sBLS = 95;
 			break;
@@ -273,7 +274,7 @@ void turnServos(int turnpos, int lastpos)
 		servo[frontLS]= sFLS;
 		servo[backLS]= sBLS;
 		wait1Msec(150);		// only do this if changing servo pos.   if same as last time, then skip.
-	wait1Msec(1000);//for debug
+
 		//
 		// Now, stop motors.  Will be restarted in new direction.
 		//
@@ -429,7 +430,7 @@ void gostraight(int distance)
 void godirection(int direction, int distance)
 {
 
-int speed=90*distance/abs(distance);
+	int speed=90*distance/abs(distance);
 
 	int clicks=1440*3*PI*distance/128;
 
@@ -454,32 +455,145 @@ int speed=90*distance/abs(distance);
 
 }
 
+void getcenterpos()
+{
+
+	//default is 2 because #2 routine works for positions 1 & 2
+	int acS1, acS2, acS3, acS4, acS5;//irsensor values
+	//	int acS1avg=0, acS2avg=0, acS3avg=0, acS4avg=0, acS5avg=0; //these were for testing the irsensor
+	//	int prevacS1, prevacS2, prevacS3, prevacS4, prevacS5;			//these were for testing the irsensor
+	int irthreshold=58.5;//to decide if position 3 or something else
+	int irthreshold2=10;//to decide if position 2 or 1
 
 
-void program15()
+	HTIRS2readAllACStrength(HTIRS2,  acS1, acS2, acS3, acS4, acS5);//used to get ir sensor values
+
+	if(acS4>irthreshold)//finding position of centerpiece
+	{
+		centerpos=3;
+	}
+	else if(acS4>irthreshold2)
+	{
+		centerpos=2;
+	}
+	else
+	{
+		centerpos=1;
+	}
+
+
+}
+
+
+
+void moveelevmotor(int distance)
+{
+	int speed=100*distance/abs(distance);//forward or backward
+	int clicks=1440*PI*distance;
+
+	nMotorEncoder[elevator1] = 0;
+	nMotorEncoder[elevator2] = 0;
+
+	while(abs(nMotorEncoder[elevator1]) < abs(clicks) && abs(nMotorEncoder[elevator2]) < abs(clicks))
+	{
+		motor[elevator1] = speed;
+		motor[elevator2] = speed;
+	}
+	motor[elevator1] = 0;
+	motor[elevator2] = 0;
+
+}
+
+
+
+
+
+
+void changeelevator(int newelevpos)//VALUES HAVE NOT BEEN TESTED
+{//DO NOT USE UNTIL CORRECT VALUES ARE INPUTTED
+	if(newelevpos==lastelevator)
+	{
+		return;
+	}else if(lastelevator==30 && newelevpos==60)
+	{
+		moveelevmotor(100);
+	}else if(lastelevator==30 && newelevpos==90)
+	{
+		moveelevmotor(200);
+	}else if(lastelevator==30 && newelevpos==120)
+	{
+		moveelevmotor(300);
+	}else if(lastelevator==60 && newelevpos==30)
+	{
+		moveelevmotor(-100);
+	}else if(lastelevator==60 && newelevpos==90)
+	{
+		moveelevmotor(100);
+	}else if(lastelevator==60 && newelevpos==120)
+	{
+		moveelevmotor(200);
+	}else if(lastelevator==90 && newelevpos==30)
+	{
+		moveelevmotor(-200);
+	}else if(lastelevator==90 && newelevpos==60)
+	{
+		moveelevmotor(-100);
+	}else if(lastelevator==90 && newelevpos==120)
+	{
+		moveelevmotor(100);
+	}else if(lastelevator==120 && newelevpos==90)
+	{
+		moveelevmotor(-100);
+	}else if(lastelevator==120 && newelevpos==60)
+	{
+		moveelevmotor(-200);
+	}else if(lastelevator==120 && newelevpos==30)
+	{
+		moveelevmotor(-300);
+	}
+
+	lastelevator=newelevpos;
+
+	return;
+
+}
+
+void program1()
 {
 
 
 
-	godirection(1,72);//get of ramp
+	godirection(1,63);//get of ramp
 	turnServos(4,0);//forces servos to turn
-	godirection(4,36);
+	godirection(4,39);
 	turnleft90();
 	turnleft90();
-servo[gate]=gatedown;
-wait1Msec(1000);
-	godirection(1,-22);
+
+	servo[gate]=gatedown;
+	wait1Msec(1000);
+	godirection(1,-27);
 	servo[lock]=lockdown;
 	wait1Msec(100);
 	godirection(1,96);
 
 	turnleft90();
-	turnleft90();
-godirection(1,0);
+	turnleft45();
+	turnServos(1,0);
+}
+void program15()
+{
+	turnServos(1,0);//forces servos to turn
+godirection(1,72);//forward 6 feet
+
+
+
+
+
+
 }
 
 
-
+//----------------------------------------------------------------------------START TASK MAIN---------------------------------------------
 task main()
 {
 
@@ -490,8 +604,8 @@ task main()
 	starting		|what to
 	position		|do
 	______________________________
-	1		ramp		|knock down poles
-	2		parking	|knock down poles
+	1		ramp		|drop ball in small goal and move to parking
+	2						|
 	3						|
 	4						|
 	5						|
@@ -503,9 +617,9 @@ task main()
 	12					|
 	13					|
 	14					|
-	15	anywhere|go straight 5 seconds
+	15	anywhere|go straight 6 feet (can get of ramp)
 	*/
-	wait1Msec(2000);
+	//wait1Msec(2000);
 	disableDiagnosticsDisplay();
 	short colorValues[4];//these are the scanned values
 
@@ -521,10 +635,11 @@ task main()
 
 
 	// gostraight
-	sFRS = 90;
-	sBRS = 109;
-	sFLS = 132;
-	sBLS = 131;
+
+		sFRS = 161;
+			sBRS = 154;
+			sFLS = 132;
+			sBLS = 131;
 
 	servo[frontRS]= sFRS;
 	servo[backRS]= sBRS;
@@ -541,8 +656,9 @@ task main()
 	servo[gate] = gateup;
 	servo[mouth]= mouthup;
 
-godirection(1,0);
-wait1Msec(1000);
+
+	turnServos(1,0);
+	wait1Msec(1000);
 
 
 	/*
@@ -632,5 +748,5 @@ wait1Msec(1000);
 
 
 	*/
-	program15();
+	program1();
 }
