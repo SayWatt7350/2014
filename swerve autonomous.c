@@ -1,6 +1,7 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  none,     none)
 #pragma config(Hubs,  S2, HTMotor,  HTMotor,  HTServo,  HTServo)
-#pragma config(Sensor, S4,     HTIRS2,         sensorI2CCustom)
+#pragma config(Sensor, S3,     HTIRS2,         sensorI2CCustom)
+#pragma config(Sensor, S4,     Mux,            sensorHiTechnicTouchMux)
 #pragma config(Motor,  mtr_S1_C1_1,     RightFront,    tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     RightBack,     tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S2_C1_1,     elevator1,     tmotorTetrix, openLoop)
@@ -29,6 +30,11 @@
 
 #include "hitechnic-irseeker-v2.h";//3rd party driver for the ir sensor
 #include "joystickdriver.c"
+#include "hitechnic-sensormux.h"    //Use the path where you put Xander's drivers
+#include "hitechnic-compass.h"
+#include "swerve functions.c"
+
+#define compass msensor_S4_4
 
 
 
@@ -585,12 +591,67 @@ void program15()
 	turnServos(1,0);//forces servos to turn
 godirection(1,72);//forward 6 feet
 
+}
+
+
+void program2()
+{
+	turnServos(1,0);//forces servos to turn
+	godirection(5,25);
+	godirection(1,75);
+	turnleft90();
+	turnleft90();
+	servo[gate]=gatedown;
+	godirection(1,-45);
+	servo[lock]=lockdown;
+
+	godirection(1,70);
+
+	turnright90();
+	turnright45();
+
+	godirection(1,-15);
+
+}
+
+void calibratecompass()
+{
+
+
+
+
+	turnServos(2,0);//forces servos to turn
+
+	int speed=20;
+	int clicks=1440*3*PI;//turn 720
+
+	nMotorEncoder[RightBack] = 0;
+	nMotorEncoder[RightFront] = 0;
+	nMotorEncoder[LeftBack] = 0;
+	nMotorEncoder[LeftFront] = 0;
+	while(nMotorEncoder[RightBack] < clicks && nMotorEncoder[LeftFront] < clicks)
+	{
+		motor[RightFront] = speed;
+		motor[RightBack] = speed;
+		motor[LeftFront] = -speed;
+		motor[LeftBack] = -speed;
+	}
+	motor[RightFront] = 0;
+	motor[RightBack] = 0;
+	motor[LeftFront] = 0;
+	motor[LeftBack] = 0;
+
 
 
 
 
 
 }
+
+
+
+
+
 
 
 //----------------------------------------------------------------------------START TASK MAIN---------------------------------------------
@@ -605,7 +666,7 @@ task main()
 	position		|do
 	______________________________
 	1		ramp		|drop ball in small goal and move to parking
-	2						|
+	2		parking	|drop ball in small goal and move to parking
 	3						|
 	4						|
 	5						|
@@ -708,10 +769,10 @@ task main()
 	switch(selectedColor)
 	{
 	case 1:
-	//		program1();
+			program1();
 	break;
-	case 2:
-	//	program2();
+		case 2:
+		program2();
 	break;
 	/*case 3:
 	break;
