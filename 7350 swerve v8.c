@@ -155,11 +155,15 @@ void turnServos(int turnpos, int lastpos)
 		//
 		//  now turn servos
 		//
-		servo[frontRS]= sFRS;
-		servo[backRS]= sBRS;
-		servo[frontLS]= sFLS;
 		servo[backLS]= sBLS;
-		wait1Msec(150);		// only do this if changing servo pos.   if same as last time, then skip.
+		//		wait1Msec(25);
+		servo[backRS]= sBRS;
+	//			wait1Msec(25);
+		servo[frontLS]= sFLS;
+		//		wait1Msec(25);
+		servo[frontRS]= sFRS;
+			//	wait1Msec(25);
+		wait1Msec(100);		// only do this if changing servo pos.   if same as last time, then skip.
 
 		//
 		// Now, stop motors.  Will be restarted in new direction.
@@ -200,7 +204,7 @@ task main()
 	int openwideR = 0;
 	int openwideL = 228;
 	//  mouth
-	int mouthup=60;
+	int mouthup=75;
 	int mouthdown=214;
 	//
 	int elevatorposition=0;
@@ -234,6 +238,10 @@ task main()
 	//
 	//  wheels  go straight to start
 	//
+	servoChangeRate[frontRS]=10;
+	servoChangeRate[backRS]=10;
+	servoChangeRate[frontLS]=10;
+	servoChangeRate[backLS]=10;
 	servo[frontRS]= straight_FRS;
 	servo[backRS]= straight_BRS;
 	servo[frontLS]= straight_FLS;
@@ -273,7 +281,6 @@ task main()
 			// if going forward or back
 			{
 				FRS=BRS=FLS = BLS = (abs(joystick.joy1_y1)*100)/joystick.joy1_y1;
-				//FRS=BRS=(BLS+correction);
 
 				// servos
 				turnServos(1, lastservopos);

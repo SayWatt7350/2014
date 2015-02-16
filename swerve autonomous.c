@@ -1,5 +1,7 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  none,     none)
 #pragma config(Hubs,  S2, HTMotor,  HTMotor,  HTServo,  HTServo)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
+#pragma config(Sensor, S2,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S3,     HTIRS2,         sensorI2CCustom)
 #pragma config(Sensor, S4,     Mux,            sensorHiTechnicTouchMux)
 #pragma config(Motor,  mtr_S1_C1_1,     RightFront,    tmotorTetrix, openLoop)
@@ -35,7 +37,7 @@
 #include "swerve functions.c"
 
 #define compass msensor_S4_4
-
+#define colorport msensor_s4_2
 
 
 
@@ -280,7 +282,7 @@ void turnServos(int turnpos, int lastpos)
 		servo[frontLS]= sFLS;
 		servo[backLS]= sBLS;
 		wait1Msec(150);		// only do this if changing servo pos.   if same as last time, then skip.
-
+		wait1Msec(2850);//for testing
 		//
 		// Now, stop motors.  Will be restarted in new direction.
 		//
@@ -568,11 +570,11 @@ void program1()
 {
 
 
-
+/*
 	godirection(1,63);//get of ramp
-	turnServos(4,0);//forces servos to turn
+*/	turnServos(4,0);//forces servos to turn
 	godirection(4,39);
-	turnleft90();
+/*	turnleft90();
 	turnleft90();
 
 	servo[gate]=gatedown;
@@ -585,6 +587,7 @@ void program1()
 	turnleft90();
 	turnleft45();
 	turnServos(1,0);
+	*/
 }
 void program15()
 {
