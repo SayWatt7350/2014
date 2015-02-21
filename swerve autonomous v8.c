@@ -1,7 +1,5 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  none,     none)
 #pragma config(Hubs,  S2, HTMotor,  HTMotor,  HTServo,  HTServo)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S2,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S3,     HTIRS2,         sensorI2CCustom)
 #pragma config(Sensor, S4,     Mux,            sensorHiTechnicTouchMux)
 #pragma config(Motor,  mtr_S1_C1_1,     RightFront,    tmotorTetrix, openLoop)
@@ -34,10 +32,10 @@
 #include "joystickdriver.c"
 #include "hitechnic-sensormux.h"    //Use the path where you put Xander's drivers
 #include "hitechnic-compass.h"
-#include "swerve functions.c"
+//#include "swerve functions.c"
 
 #define compass msensor_S4_4
-#define colorport msensor_s4_2
+
 
 
 
@@ -184,7 +182,6 @@ void difference(long r1, long g1, long b1, long r2, long g2, long b2)
 //				5 = sideways
 //
 
-
 void turnServos(int turnpos, int lastpos)
 {
 	if (lastpos != turnpos)    // Only execute if the new position is different than the old position. otherwise return.
@@ -208,6 +205,7 @@ void turnServos(int turnpos, int lastpos)
 		motor[LeftFront] = mFLS;
 		motor[RightBack] = mBRS;
 		motor[LeftBack] = mBLS;
+		wait1Msec(100);  // delay so don't overdraw current on servo block;
 
 
 		switch (turnpos)
@@ -225,7 +223,7 @@ void turnServos(int turnpos, int lastpos)
 			sFLS = 170;				//		/							u
 			sBLS = 95;				//		\							u
 			// set motors direction to help servos and turn same direction as servo.
-			if (lastpos == 1)  // straight to spin
+/*			if (lastpos == 1)  // straight to spin
 			{
 				mFRS = mBLS = -30;
 				mFLS = mBLS = 30;
@@ -234,7 +232,7 @@ void turnServos(int turnpos, int lastpos)
 				mFRS = mBLS = 30;
 				mFLS = mBLS = -30;
 			}
-
+*/
 			break;
 
 		case 3:				// 45 degree turn to right  ???
@@ -269,32 +267,38 @@ void turnServos(int turnpos, int lastpos)
 		}   // end of switch
 
 		// turn motor to help servo turn or leave it stopped
-		motor[RightFront] = mFRS;
+/*		motor[RightFront] = mFRS;
 		motor[LeftFront] = mFLS;
 		motor[RightBack] = mBRS;
 		motor[LeftBack] = mBLS;
-
+	wait1Msec(100);  // delay so don't overdraw current on servo block;
+*/
 		//
 		//  now turn servos
 		//
 		servo[frontRS]= sFRS;
+	wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[backRS]= sBRS;
+	wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[frontLS]= sFLS;
+	wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[backLS]= sBLS;
-		wait1Msec(150);		// only do this if changing servo pos.   if same as last time, then skip.
-		wait1Msec(2850);//for testing
+		wait1Msec(2000);		// only do this if changing servo pos.   if same as last time, then skip.
+
 		//
 		// Now, stop motors.  Will be restarted in new direction.
 		//
-		motor[RightFront] = 0;
+/*		motor[RightFront] = 0;
 		motor[LeftFront] = 0;
 		motor[RightBack] = 0;
 		motor[LeftBack] = 0;
+		*/
 	}
 
 	lastpos = turnpos;
 	return;
 }
+
 
 void turnright45()//turn 45 degrees right
 {
@@ -390,7 +394,7 @@ void turnleft90()//turn 90 degrees left
 	nMotorEncoder[RightFront] = 0;
 	nMotorEncoder[LeftBack] = 0;
 	nMotorEncoder[LeftFront] = 0;
-	while(nMotorEncoder[RightBack] < clicks && nMotorEncoder[LeftFront] < clicks)
+	while(nMotorEncoder[RightBack] < (clicks+207))
 	{
 		motor[RightFront] = speed;
 		motor[RightBack] = speed;
@@ -569,12 +573,10 @@ void changeelevator(int newelevpos)//VALUES HAVE NOT BEEN TESTED
 void program1()
 {
 
-
-/*
 	godirection(1,63);//get of ramp
-*/	turnServos(4,0);//forces servos to turn
-	godirection(4,39);
-/*	turnleft90();
+	turnServos(4,0);//forces servos to
+	godirection(4,40);
+	turnleft90();
 	turnleft90();
 
 	servo[gate]=gatedown;
@@ -582,12 +584,20 @@ void program1()
 	godirection(1,-27);
 	servo[lock]=lockdown;
 	wait1Msec(100);
-	godirection(1,96);
+	godirection(1,2);
+	servo[lock] = lockup;
+	wait1Msec(100);
+	godirection(1,-3);
+	servo[lock] = lockdown;
+	wait1Msec(100);
+	godirection(1,48);
+//	turnServos(3,0);
+	godirection(3,70);
+
 
 	turnleft90();
 	turnleft45();
 	turnServos(1,0);
-	*/
 }
 void program15()
 {
@@ -722,7 +732,7 @@ task main()
 
 
 	turnServos(1,0);
-	wait1Msec(1000);
+	wait1Msec(4000);
 
 
 	/*
