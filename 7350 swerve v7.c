@@ -92,14 +92,14 @@ void turnServos(int turnpos, int lastpos)
 		{
 		case 1:							// gostraight
 			sFRS = 161;
-			sBRS = 154;
+			sBRS = 131;
 			sFLS = 132;
 			sBLS = 131;
 			break;
 
 		case 2:							// spin
 			sFRS = 107;				//   						\  	u
-			sBRS = 187;				//  						/	 	u
+			sBRS = 166;				//  						/	 	u
 			sFLS = 170;				//		/							u
 			sBLS = 95;				//		\							u
 			// set motors direction to help servos and turn same direction as servo.
@@ -117,7 +117,7 @@ void turnServos(int turnpos, int lastpos)
 
 		case 3:				// 45 degree turn to right  ???
 			sFRS = 219;				//   						/
-			sBRS = 187;				//  						/
+			sBRS = 166;				//  						/
 			sFLS = 170;				//		/
 			sBLS = 168;				//	 ??? /
 			break;
@@ -125,7 +125,7 @@ void turnServos(int turnpos, int lastpos)
 
 		case 4:				// 45 degree turn to left ???
 			sFRS = 107;				//   						\		u
-			sBRS = 114;				//  						\		u
+			sBRS = 96;				//  						\		u
 			sFLS = 100;				//		\							u
 			sBLS = 95;				//	  \							u
 			break;

@@ -86,10 +86,9 @@ void turnServos(int turnpos, int lastpos)
 		motor[LeftFront] = mFLS;
 		motor[RightBack] = mBRS;
 		motor[LeftBack] = mBLS;
-<<<<<<< HEAD
+
 		wait1Msec(100);  // delay so don't overdraw current on servo block;
-=======
->>>>>>> origin/master
+
 
 
 		switch (turnpos)
@@ -107,11 +106,11 @@ void turnServos(int turnpos, int lastpos)
 			sFLS = 170;				//		/							u
 			sBLS = 95;				//		\							u
 			// set motors direction to help servos and turn same direction as servo.
-<<<<<<< HEAD
+
 /*			if (lastpos == 1)  // straight to spin
-=======
+
 			if (lastpos == 1)  // straight to spin
->>>>>>> origin/master
+
 			{
 				mFRS = mBLS = -30;
 				mFLS = mBLS = 30;
@@ -120,11 +119,10 @@ void turnServos(int turnpos, int lastpos)
 				mFRS = mBLS = 30;
 				mFLS = mBLS = -30;
 			}
-<<<<<<< HEAD
-*/
-=======
 
->>>>>>> origin/master
+*/
+
+
 			break;
 
 		case 3:				// 45 degree turn to right  ???
@@ -159,7 +157,7 @@ void turnServos(int turnpos, int lastpos)
 		}   // end of switch
 
 		// turn motor to help servo turn or leave it stopped
-<<<<<<< HEAD
+
 /*		motor[RightFront] = mFRS;
 		motor[LeftFront] = mFLS;
 		motor[RightBack] = mBRS;
@@ -177,7 +175,7 @@ void turnServos(int turnpos, int lastpos)
 	wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[backLS]= sBLS;
 		wait1Msec(150);		// only do this if changing servo pos.   if same as last time, then skip.
-=======
+
 		motor[RightFront] = mFRS;
 		motor[LeftFront] = mFLS;
 		motor[RightBack] = mBRS;
@@ -195,23 +193,23 @@ void turnServos(int turnpos, int lastpos)
 		servo[frontRS]= sFRS;
 			//	wait1Msec(25);
 		wait1Msec(100);		// only do this if changing servo pos.   if same as last time, then skip.
->>>>>>> origin/master
+
 
 		//
 		// Now, stop motors.  Will be restarted in new direction.
 		//
-<<<<<<< HEAD
+
 /*		motor[RightFront] = 0;
 		motor[LeftFront] = 0;
 		motor[RightBack] = 0;
 		motor[LeftBack] = 0;
 		*/
-=======
+
 		motor[RightFront] = 0;
 		motor[LeftFront] = 0;
 		motor[RightBack] = 0;
 		motor[LeftBack] = 0;
->>>>>>> origin/master
+
 	}
 
 	lastpos = turnpos;
@@ -244,11 +242,8 @@ task main()
 	int openwideR = 0;
 	int openwideL = 228;
 	//  mouth
-<<<<<<< HEAD
-	int mouthup=60;
-=======
+	//int mouthup=60;
 	int mouthup=75;
->>>>>>> origin/master
 	int mouthdown=214;
 	//
 	int elevatorposition=0;
@@ -276,7 +271,6 @@ task main()
 	servo[leftmandible] = openwideL;
 	servo[rightmandible] = openwideR;
 	//	servo[mouth] = mouthup;
-<<<<<<< HEAD
 	wait1Msec(400);  // delay so don't overdraw current on servo block;
 	servo[score] = scoreclose;
 	servo[lock] = lockup;
@@ -306,7 +300,7 @@ task main()
 
 	//lastservopos = 0;  // force it to go to new position
 
-=======
+
 	servo[score] = scoreclose;
 	servo[lock] = lockup;
 	servo[gate] = gateup;
@@ -326,7 +320,7 @@ task main()
 
 	waitForStart();
 	//turnServos(1, lastservopos);
->>>>>>> origin/master
+
 	servo[gate] = gatedrive;
 
 	//	waitForStart();
