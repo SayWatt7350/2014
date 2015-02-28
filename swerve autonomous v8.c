@@ -1,6 +1,6 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  none,     none)
 #pragma config(Hubs,  S2, HTMotor,  HTMotor,  HTServo,  HTServo)
-#pragma config(Sensor, S3,     HTIRS2,         sensorI2CCustom)
+#pragma config(Sensor, S3,     compass,         sensorI2CCustom)
 #pragma config(Sensor, S4,     Mux,            sensorHiTechnicTouchMux)
 #pragma config(Motor,  mtr_S1_C1_1,     RightFront,    tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     RightBack,     tmotorTetrix, openLoop, reversed)
@@ -34,7 +34,7 @@
 #include "hitechnic-compass.h"
 //#include "swerve functions.c"
 
-#define compass msensor_S4_4
+#define HTIRS2 msensor_S4_4
 
 
 
@@ -189,7 +189,7 @@ void turnServos(int turnpos, int lastpos)
 		//   straight defaults
 		// define temporary variables servo default is straight.
 		int sFRS = 161;
-		int sBRS = 154;
+		int sBRS = 131;
 		int sFLS = 132;
 		int sBLS = 131;
 
@@ -212,32 +212,32 @@ void turnServos(int turnpos, int lastpos)
 		{
 		case 1:							// gostraight
 			sFRS = 161;
-			sBRS = 154;
+			sBRS = 131;
 			sFLS = 132;
 			sBLS = 131;
 			break;
 
 		case 2:							// spin
 			sFRS = 107;				//   						\  	u
-			sBRS = 187;				//  						/	 	u
+			sBRS = 166;				//  						/	 	u
 			sFLS = 170;				//		/							u
 			sBLS = 95;				//		\							u
 			// set motors direction to help servos and turn same direction as servo.
-/*			if (lastpos == 1)  // straight to spin
+			/*			if (lastpos == 1)  // straight to spin
 			{
-				mFRS = mBLS = -30;
-				mFLS = mBLS = 30;
+			mFRS = mBLS = -30;
+			mFLS = mBLS = 30;
 			} else if (lastpos == 5)  // sideways to spin
 			{
-				mFRS = mBLS = 30;
-				mFLS = mBLS = -30;
+			mFRS = mBLS = 30;
+			mFLS = mBLS = -30;
 			}
-*/
+			*/
 			break;
 
 		case 3:				// 45 degree turn to right  ???
 			sFRS = 219;				//   						/
-			sBRS = 187;				//  						/
+			sBRS = 166;				//  						/
 			sFLS = 170;				//		/
 			sBLS = 168;				//	 ??? /
 			break;
@@ -245,50 +245,58 @@ void turnServos(int turnpos, int lastpos)
 
 		case 4:				// 45 degree turn to left ???
 			sFRS = 107;				//   						\		u
-			sBRS = 114;				//  						\		u
+			sBRS = 96;				//  						\		u
 			sFLS = 100;				//		\							u
 			sBLS = 95;				//	  \							u
 			break;
 
 		case 5:				// sideways ???
 			sFRS = 49;				//   						->
-			sBRS = 80;				//  						->
+			sBRS = 203;				//  						->
 			sFLS = 255;				//		->
 			sBLS = 56;				//	  ->
 			break;
 
+		case 6:// 20 degree value between | and /
+			sFRS = 191;
+			sBRS = 154;
+			sFLS = 191;
+			sBLS = 154;
+			break;
+
+
 		default:			// gostraight
 
 			sFRS = 161;
-			sBRS = 154;
+			sBRS = 131;
 			sFLS = 132;
 			sBLS = 95;
 			break;
 		}   // end of switch
 
 		// turn motor to help servo turn or leave it stopped
-/*		motor[RightFront] = mFRS;
+		/*		motor[RightFront] = mFRS;
 		motor[LeftFront] = mFLS;
 		motor[RightBack] = mBRS;
 		motor[LeftBack] = mBLS;
-	wait1Msec(100);  // delay so don't overdraw current on servo block;
-*/
+		wait1Msec(100);  // delay so don't overdraw current on servo block;
+		*/
 		//
 		//  now turn servos
 		//
 		servo[frontRS]= sFRS;
-	wait1Msec(100);  // delay so don't overdraw current on servo block;
+		wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[backRS]= sBRS;
-	wait1Msec(100);  // delay so don't overdraw current on servo block;
+		wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[frontLS]= sFLS;
-	wait1Msec(100);  // delay so don't overdraw current on servo block;
+		wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[backLS]= sBLS;
-		wait1Msec(2000);		// only do this if changing servo pos.   if same as last time, then skip.
+	//	wait1Msec(2000);		// only do this if changing servo pos.   if same as last time, then skip.
 
 		//
 		// Now, stop motors.  Will be restarted in new direction.
 		//
-/*		motor[RightFront] = 0;
+		/*		motor[RightFront] = 0;
 		motor[LeftFront] = 0;
 		motor[RightBack] = 0;
 		motor[LeftBack] = 0;
@@ -467,7 +475,7 @@ void godirection(int direction, int distance)
 
 }
 
-void getcenterpos()
+void getcenterpos()//returns center piece position when robot is on top of ramp
 {
 
 	//default is 2 because #2 routine works for positions 1 & 2
@@ -478,7 +486,7 @@ void getcenterpos()
 	int irthreshold2=10;//to decide if position 2 or 1
 
 
-	HTIRS2readAllACStrength(HTIRS2,  acS1, acS2, acS3, acS4, acS5);//used to get ir sensor values
+	HTIRS2readAllACStrength(compass, acS1, acS2, acS3, acS4, acS5);//used to get ir sensor values
 
 	if(acS4>irthreshold)//finding position of centerpiece
 	{
@@ -570,11 +578,14 @@ void changeelevator(int newelevpos)//VALUES HAVE NOT BEEN TESTED
 
 }
 
+
+
+
 void program1()
 {
 
 	godirection(1,63);//get of ramp
-	turnServos(4,0);//forces servos to
+	turnServos(4,0);//forces servos to turn
 	godirection(4,40);
 	turnleft90();
 	turnleft90();
@@ -591,7 +602,7 @@ void program1()
 	servo[lock] = lockdown;
 	wait1Msec(100);
 	godirection(1,48);
-//	turnServos(3,0);
+	//	turnServos(3,0);
 	godirection(3,70);
 
 
@@ -599,12 +610,19 @@ void program1()
 	turnleft45();
 	turnServos(1,0);
 }
+
+
+
+
+
 void program15()
 {
 	turnServos(1,0);//forces servos to turn
-godirection(1,72);//forward 6 feet
+	godirection(1,72);//forward 6 feet
 
 }
+
+
 
 
 void program2()
@@ -627,41 +645,95 @@ void program2()
 
 }
 
-void calibratecompass()
+void compassturn(int degrees)
 {
-
-
-
+	int speed= 70*(degrees/abs(degrees));
 
 	turnServos(2,0);//forces servos to turn
 
-	int speed=20;
-	int clicks=1440*3*PI;//turn 720
+	int clicks=1440*3*PI/720*degrees + 200;//turns the degrees specified + a bit because we want to rely more on the compass sensor
+	int wantedcompassdegree=HTMCreadHeading(compass)-degrees;
+
+	if(wantedcompassdegree>360)
+	{
+		wantedcompassdegree-=360;
+	}
+	if(wantedcompassdegree<360)
+	{
+		wantedcompassdegree+=360;
+	}
+
 
 	nMotorEncoder[RightBack] = 0;
 	nMotorEncoder[RightFront] = 0;
 	nMotorEncoder[LeftBack] = 0;
 	nMotorEncoder[LeftFront] = 0;
-	while(nMotorEncoder[RightBack] < clicks && nMotorEncoder[LeftFront] < clicks)
+
+
+	while(abs(nMotorEncoder[RightBack]) < abs(clicks)
+		&& abs(nMotorEncoder[LeftFront]) < abs(clicks)
+	&& abs(HTMCreadHeading(compass)-wantedcompassdegree)>0)//while difference between current heading and wanted heading is greater than 0
 	{
 		motor[RightFront] = speed;
 		motor[RightBack] = speed;
 		motor[LeftFront] = -speed;
 		motor[LeftBack] = -speed;
 	}
+
+
 	motor[RightFront] = 0;
 	motor[RightBack] = 0;
 	motor[LeftFront] = 0;
 	motor[LeftBack] = 0;
 
-
-
-
-
-
 }
 
+void compassstraight(int direction, int distance)
+{
 
+	int speed= 70*(distance/abs(distance));
+
+	turnServos(direction,0);//forces servos to turn
+
+	int clicks=1440*3*PI*distance/128;
+	int wantedcompassdegree=HTMCreadHeading(compass);
+
+	nMotorEncoder[RightBack] = 0;
+	nMotorEncoder[RightFront] = 0;
+	nMotorEncoder[LeftBack] = 0;
+	nMotorEncoder[LeftFront] = 0;
+
+//abs so can be positive and negative
+	while(abs(nMotorEncoder[RightBack]) < abs(clicks)	&& abs(nMotorEncoder[LeftFront]) < abs(clicks))//while difference between current heading and wanted heading is greater than 0
+	{
+		if(HTMCreadHeading(compass)>wantedcompassdegree)
+		{
+			motor[RightFront] = speed;
+			motor[RightBack] = speed;
+			motor[LeftFront] = speed/7*(abs(HTMCreadHeading(compass)-wantedcompassdegree)+7);//drive side faster at the rate of the difference between current and wanted compass degree
+			motor[LeftBack] = speed/7*(abs(HTMCreadHeading(compass)-wantedcompassdegree)+7);//drive side faster at the rate of the difference between current and wanted compass degree
+		}	else if(HTMCreadHeading(compass)<wantedcompassdegree)
+		{
+			motor[RightFront] = speed/7*(abs(HTMCreadHeading(compass)-wantedcompassdegree)+7);//drive side faster at the rate of the difference between current and wanted compass degree
+			motor[RightBack] = speed/7*(abs(HTMCreadHeading(compass)-wantedcompassdegree)+7);//drive side faster at the rate of the difference between current and wanted compass degree
+			motor[LeftFront] = speed;
+			motor[LeftBack] = speed;
+		}else
+		{
+
+			motor[RightFront] = speed;
+			motor[RightBack] = speed;
+			motor[LeftFront] = speed;
+			motor[LeftBack] = speed;
+		}
+	}
+
+	motor[RightFront] = 0;
+	motor[RightBack] = 0;
+	motor[LeftFront] = 0;
+	motor[LeftBack] = 0;
+
+}
 
 
 
@@ -679,7 +751,7 @@ task main()
 	position		|do
 	______________________________
 	1		ramp		|drop ball in small goal and move to parking
-	2		parking	|drop ball in small goal and move to parking
+	2		parking	|drop ball in small goal and move to parking//values not tested
 	3						|
 	4						|
 	5						|
@@ -710,10 +782,10 @@ task main()
 
 	// gostraight
 
-		sFRS = 161;
-			sBRS = 154;
-			sFLS = 132;
-			sBLS = 131;
+	sFRS = 161;
+	sBRS = 154;
+	sFLS = 132;
+	sBLS = 131;
 
 	servo[frontRS]= sFRS;
 	servo[backRS]= sBRS;
@@ -731,8 +803,8 @@ task main()
 	servo[mouth]= mouthup;
 
 
-	turnServos(1,0);
-	wait1Msec(4000);
+//	turnServos(1,0);
+//	wait1Msec(4000);
 
 
 	/*
@@ -746,7 +818,8 @@ task main()
 	b = colorValues[2];
 	}
 
-
+	for(int x=0; x<10; x++)//test values a couple of times to make sure we have the right one
+	{
 	for(int i = 0; i < COLOR_COUNT; i++)//here we find the closest color in our database
 	{
 
@@ -766,15 +839,16 @@ task main()
 	nxtDisplayCenteredTextLine(1, "%d,%d,%d", colorValues[0], colorValues[1], colorValues[2]);
 	nxtDisplayCenteredTextLine(4, "%d,%d,%d,",	colorTags[i][0], colorTags[i][1], colorTags[i][2]);
 	}
-
-	nxtDisplayCenteredTextLine(2, "%s", colornames[selectedColor]);
+	}
+	/*nxtDisplayCenteredTextLine(2, "%s", colornames[selectedColor]);
 	nxtDisplayCenteredTextLine(3, "Is this the color?");
 	if(nNxtButtonPressed==2)
 	{
 	break;
 	}
 	}
-
+	*/
+	/*
 	waitForStart();*/
 	servo[gate]=gatedrive;
 
@@ -782,10 +856,10 @@ task main()
 	switch(selectedColor)
 	{
 	case 1:
-			program1();
+	program1();
 	break;
-		case 2:
-		program2();
+	case 2:
+	program2();
 	break;
 	/*case 3:
 	break;
@@ -822,5 +896,7 @@ task main()
 
 
 	*/
-	program1();
+//	program1();
+
+	godirection(6,20);
 }
