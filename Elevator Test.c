@@ -35,7 +35,7 @@ task main()
 			motor[elevator1]= 100;//Raises the elevator
 			motor[elevator2]= 100;
 		}
-		else if((joystick.joy1_y2) < -threshold && SensorValue(touch)==0)
+		else if((joystick.joy1_y2) < -threshold && (touch)==0)
 		{
 			motor[elevator1]=-100;
 			motor[elevator2]=-100;
