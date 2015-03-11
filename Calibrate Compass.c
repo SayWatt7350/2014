@@ -106,12 +106,39 @@ int lastservopos = 0;   // 1 = straight, 2 = spin , 3 = turn 45 deg to right, 4 
 
 void turnServos(int turnpos, int lastpos)
 {
+
+		int FRStraight = 161;
+		int BRStraight = 132;
+		int FLStraight = 110;
+		int BLStraight = 159;
+
+		int FRLeft = 107;
+		int BRLeft = 100;
+		int FLLeft = 76;
+		int BLLeft = 99;
+
+		int FRRight = 219;
+		int BRRight = 167;
+		int FLRight = 144;
+		int BLRight = 241;
+
+		int FRSide = 49;
+		int BRSide = 203;
+		int FLSide = 179;
+		int BLSide = 42;
+/*
+	servoChangeRate[RightFront]=1;
+	servoChangeRate[LeftFront]=1;
+	servoChangeRate[LeftBack]=1;
+	servoChangeRate[RightBack]=1;
+*/
+
 	if (lastpos != turnpos)    // Only execute if the new position is different than the old position. otherwise return.
 	{
 		//   straight defaults
 		// define temporary variables servo default is straight.
 		int sFRS = 161;
-		int sBRS = 131;
+		int sBRS = 154;
 		int sFLS = 132;
 		int sBLS = 131;
 
@@ -127,107 +154,149 @@ void turnServos(int turnpos, int lastpos)
 		motor[LeftFront] = mFLS;
 		motor[RightBack] = mBRS;
 		motor[LeftBack] = mBLS;
-		wait1Msec(100);  // delay so don't overdraw current on servo block;
 
 
 		switch (turnpos)
 		{
 		case 1:							// gostraight
-			sFRS = 161;
-			sBRS = 131;
-			sFLS = 132;
-			sBLS = 131;
+			sFRS = FRStraight;
+			sBRS = BRStraight;
+			sFLS = FLStraight;
+			sBLS = BLStraight;
 			break;
 
 		case 2:							// spin
-			sFRS = 107;				//   						\  	u
-			sBRS = 166;				//  						/	 	u
-			sFLS = 170;				//		/							u
-			sBLS = 95;				//		\							u
+			sFRS = FRLeft;				//   						\  	u
+			sBRS = BRRight;				//  						/	 	u
+			sFLS = FLRight;				//		/							u
+			sBLS = BLLeft;				//		\							u
 			// set motors direction to help servos and turn same direction as servo.
-			/*			if (lastpos == 1)  // straight to spin
+			if (lastpos == 1)  // straight to spin
 			{
-			mFRS = mBLS = -30;
-			mFLS = mBLS = 30;
+				mFRS = mBLS = -30;
+				mFLS = mBLS = 30;
 			} else if (lastpos == 5)  // sideways to spin
 			{
-			mFRS = mBLS = 30;
-			mFLS = mBLS = -30;
+				mFRS = mBLS = 30;
+				mFLS = mBLS = -30;
 			}
-			*/
+
 			break;
 
 		case 3:				// 45 degree turn to right  ???
-			sFRS = 219;				//   						/
-			sBRS = 166;				//  						/
-			sFLS = 170;				//		/
-			sBLS = 168;				//	 ??? /
+			sFRS = FRRight;				//   						/
+			sBRS = BRRight;				//  						/
+			sFLS = FLRight;				//		/
+			sBLS = BLRight;				//	 ??? /
 			break;
 
 
 		case 4:				// 45 degree turn to left ???
-			sFRS = 107;				//   						\		u
-			sBRS = 96;				//  						\		u
-			sFLS = 100;				//		\							u
-			sBLS = 95;				//	  \							u
+			sFRS = FRLeft;				//   						\		u
+			sBRS = BRLeft;				//  						\		u
+			sFLS = FLLeft;				//		\							u
+			sBLS = BLLeft;				//	  \							u
 			break;
 
 		case 5:				// sideways ???
-			sFRS = 49;				//   						->
-			sBRS = 203;				//  						->
-			sFLS = 255;				//		->
-			sBLS = 56;				//	  ->
+			sFRS = FRSide;				//   						->
+			sBRS = BRSide;				//  						->
+			sFLS = FLSide;				//		->
+			sBLS = BLSide;				//	  ->
 			break;
-
-		case 6:// 20 degree value between | and /
-			sFRS = 191;
-			sBRS = 154;
-			sFLS = 191;
-			sBLS = 154;
-			break;
-
 
 		default:			// gostraight
 
-			sFRS = 161;
-			sBRS = 131;
-			sFLS = 132;
-			sBLS = 95;
+			sFRS = FRStraight;
+			sBRS = BRStraight;
+			sFLS = FLStraight;
+			sBLS = BLStraight;
 			break;
 		}   // end of switch
 
 		// turn motor to help servo turn or leave it stopped
-		/*		motor[RightFront] = mFRS;
+		motor[RightFront] = mFRS;
 		motor[LeftFront] = mFLS;
 		motor[RightBack] = mBRS;
 		motor[LeftBack] = mBLS;
-		wait1Msec(100);  // delay so don't overdraw current on servo block;
-		*/
+
 		//
 		//  now turn servos
 		//
 		servo[frontRS]= sFRS;
-		wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[backRS]= sBRS;
-		wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[frontLS]= sFLS;
-		wait1Msec(100);  // delay so don't overdraw current on servo block;
 		servo[backLS]= sBLS;
-		//	wait1Msec(2000);		// only do this if changing servo pos.   if same as last time, then skip.
+		wait1Msec(150);		// only do this if changing servo pos.   if same as last time, then skip.
 
 		//
 		// Now, stop motors.  Will be restarted in new direction.
 		//
-		/*		motor[RightFront] = 0;
+		motor[RightFront] = 0;
 		motor[LeftFront] = 0;
 		motor[RightBack] = 0;
 		motor[LeftBack] = 0;
-		*/
 	}
 
 	lastpos = turnpos;
 	return;
 }
+
+
+void turnright45()//turn 45 degrees right
+{
+
+	turnServos(2,lastservopos);
+	int speed=50;
+	int clicks=1440*3*PI/16;
+
+	nMotorEncoder[RightBack] = 0;
+	nMotorEncoder[RightFront] = 0;
+	nMotorEncoder[LeftBack] = 0;
+	nMotorEncoder[LeftFront] = 0;
+	while(nMotorEncoder[RightBack] < clicks && nMotorEncoder[LeftFront] > -clicks)
+	{
+		motor[RightFront] = speed;
+		motor[RightBack] = speed;
+		motor[LeftFront] = -speed;
+		motor[LeftBack] = -speed;
+	}
+	motor[RightFront] = 0;
+	motor[RightBack] = 0;
+	motor[LeftFront] = 0;
+	motor[LeftBack] = 0;
+
+
+}
+
+void turnright90()//turn 90 degrees right
+{
+	turnServos(2,lastservopos);
+
+	int speed=50;
+	int clicks=1440*3*PI/8;
+
+	nMotorEncoder[RightBack] = 0;
+	nMotorEncoder[RightFront] = 0;
+	nMotorEncoder[LeftBack] = 0;
+	nMotorEncoder[LeftFront] = 0;
+	while(nMotorEncoder[RightBack] < clicks && nMotorEncoder[LeftFront] < clicks)
+	{
+		motor[RightFront] = speed;
+		motor[RightBack] = speed;
+		motor[LeftFront] = -speed;
+		motor[LeftBack] = -speed;
+	}
+	motor[RightFront] = 0;
+	motor[RightBack] = 0;
+	motor[LeftFront] = 0;
+	motor[LeftBack] = 0;
+
+
+}
+
+
+
 
 void turnleft()//turn degrees left
 {

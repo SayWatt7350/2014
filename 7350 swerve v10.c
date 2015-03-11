@@ -82,7 +82,33 @@ return scaledVal;
 
 void turnServos(int turnpos, int lastpos)
 {
-	//servoChangeRate[RightFront]=1;
+
+		int FRStraight = 161;
+		int BRStraight = 132;
+		int FLStraight = 110;
+		int BLStraight = 159;
+
+		int FRLeft = 107;
+		int BRLeft = 100;
+		int FLLeft = 76;
+		int BLLeft = 99;
+
+		int FRRight = 219;
+		int BRRight = 167;
+		int FLRight = 144;
+		int BLRight = 241;
+
+		int FRSide = 49;
+		int BRSide = 203;
+		int FLSide = 179;
+		int BLSide = 42;
+/*
+	servoChangeRate[RightFront]=1;
+	servoChangeRate[LeftFront]=1;
+	servoChangeRate[LeftBack]=1;
+	servoChangeRate[RightBack]=1;
+*/
+
 	if (lastpos != turnpos)    // Only execute if the new position is different than the old position. otherwise return.
 	{
 		//   straight defaults
@@ -109,17 +135,17 @@ void turnServos(int turnpos, int lastpos)
 		switch (turnpos)
 		{
 		case 1:							// gostraight
-			sFRS = 161;
-			sBRS = 132;
-			sFLS = 132;
-			sBLS = 159;
+			sFRS = FRStraight;
+			sBRS = BRStraight;
+			sFLS = FLStraight;
+			sBLS = BLStraight;
 			break;
 
 		case 2:							// spin
-			sFRS = 107;				//   						\  	u
-			sBRS = 167;				//  						/	 	u
-			sFLS = 170;				//		/							u
-			sBLS = 99;				//		\							u
+			sFRS = FRLeft;				//   						\  	u
+			sBRS = BRRight;				//  						/	 	u
+			sFLS = FLRight;				//		/							u
+			sBLS = BLLeft;				//		\							u
 			// set motors direction to help servos and turn same direction as servo.
 			if (lastpos == 1)  // straight to spin
 			{
@@ -134,33 +160,33 @@ void turnServos(int turnpos, int lastpos)
 			break;
 
 		case 3:				// 45 degree turn to right  ???
-			sFRS = 219;				//   						/
-			sBRS = 167;				//  						/
-			sFLS = 170;				//		/
-			sBLS = 241;				//	 ??? /
+			sFRS = FRRight;				//   						/
+			sBRS = BRRight;				//  						/
+			sFLS = FLRight;				//		/
+			sBLS = BLRight;				//	 ??? /
 			break;
 
 
 		case 4:				// 45 degree turn to left ???
-			sFRS = 107;				//   						\		u
-			sBRS = 100;				//  						\		u
-			sFLS = 100;				//		\							u
-			sBLS = 99;				//	  \							u
+			sFRS = FRLeft;				//   						\		u
+			sBRS = BRLeft;				//  						\		u
+			sFLS = FLLeft;				//		\							u
+			sBLS = BLLeft;				//	  \							u
 			break;
 
 		case 5:				// sideways ???
-			sFRS = 49;				//   						->
-			sBRS = 203;				//  						->
-			sFLS = 255;				//		->
-			sBLS = 42;				//	  ->
+			sFRS = FRSide;				//   						->
+			sBRS = BRSide;				//  						->
+			sFLS = FLSide;				//		->
+			sBLS = BLSide;				//	  ->
 			break;
 
 		default:			// gostraight
 
-			sFRS = 161;
-			sBRS = 154;
-			sFLS = 132;
-			sBLS = 95;
+			sFRS = FRStraight;
+			sBRS = BRStraight;
+			sFLS = FLStraight;
+			sBLS = BLStraight;
 			break;
 		}   // end of switch
 
@@ -207,7 +233,7 @@ task main()
 	//
 	int straight_FRS = 161;
 	int straight_BRS = 131;
-	int straight_FLS = 132;
+	int straight_FLS = 110;
 	int straight_BLS = 134;
 
 
@@ -223,6 +249,7 @@ task main()
 	//  mouth
 	int mouthup=60;
 	int mouthdown=214;
+	int mouthjiggle=74;
 	//
 	int elevatorposition=0;
 	int uppositionscore=62;
@@ -251,7 +278,7 @@ task main()
 	//	servo[mouth] = mouthup;
 	servo[score] = scoreclose;
 	servo[lock] = lockup;
-	servo[gate] = gateup;
+	//servo[gate] = gateup;
 	//
 	//  wheels  go straight to start
 	//
@@ -259,14 +286,15 @@ task main()
 	servo[backRS]= straight_BRS;
 	servo[frontLS]= straight_FLS;
 	servo[backLS]= straight_BLS;
-	servo[mouth]= mouthup;
+	//servo[mouth]= mouthup;
+	servo[mouth]= mouthdown;
 	int lastservopos = 0;   // 1 = straight, 2 = spin , 3 = turn 45 deg to right, 4 = turn 45degrees to left, 5 = turn wheels to side
 
 	waitForStart();
 	//turnServos(1, lastservopos);
-	servo[gate] = gatedrive;
+	//servo[gate] = gatedrive;
 
-	//	waitForStart();
+
 
 
 	while(true)
@@ -303,7 +331,7 @@ task main()
 			} else if ((abs(joystick.joy1_x1) > threshold) &&  (abs(joystick.joy1_y1) <= threshold)) // go sideways
 			{
 				BRS = FRS = BLS = FLS = (abs(joystick.joy1_x1)*100)/joystick.joy1_x1;  //  positive = go right, negative = go left.
-				FLS*=-1;
+				BRS=FLS=-FRS;
 				// servos
 				turnServos(5, lastservopos);  // turn wheels to right to go sideways
 				lastservopos = 5;
@@ -331,17 +359,16 @@ task main()
 		// Mandible controls
 		if(joy1Btn(8))//left one needs to close first
 		{
-			servo[rightmandible] = shutR;
-			wait1Msec(100);
 			servo[leftmandible] = shutL;
-
+			wait1Msec(100);
+			servo[rightmandible] = shutR;
 
 		}
 		if(joy1Btn(6))//right one needs to open first
 		{
-			servo[leftmandible] = openwideL;
-			wait1Msec(100);
 			servo[rightmandible] = openwideR;
+			wait1Msec(100);
+			servo[leftmandible] = openwideL;
 		}
 
 		// Mouth controls
@@ -359,17 +386,34 @@ task main()
 		{
 			servoChangeRate[mouth] = 30;
 			servo[mouth]=mouthdown;
-			servo[rightmandible] = openwideR;  // open mandibles so they don't hit elevator
+			servo[rightmandible] = openwideR;
 			servo[leftmandible] = openwideL;
 		}
+
+//jiggle the mouth
+				if(joy1Btn(3))
+		{
+			servo[rightmandible] = outR;  // open mandibles so they don't hit elevator
+			servo[leftmandible] = outL;
+
+			servoChangeRate[mouth] = 1;
+			servo[mouth]=mouthjiggle;
+			wait1Msec(300);
+			servo[mouth]=mouthup;
+			wait1Msec(300);
+			servoChangeRate[mouth] = 10;
+		}
+
 
 		/////////////    JOYSTICK 2 //////////////////
 
 		//  elevator controls
 
-		if((joystick.joy2_y2) > threshold /*&& ServoValue[mouth]<mouthup-20*/)
+		if((joystick.joy2_y2) > threshold )
 		{
 			servo[mouth]=mouthdown;
+			servo[rightmandible] = openwideR;
+			servo[leftmandible] = openwideL;
 			motor[elevator1]= 90;//Raises the elevator
 			motor[elevator2]= 90;
 		}
@@ -379,6 +423,8 @@ task main()
 		else if((joystick.joy2_y2) < -threshold && TSreadState(((tMUXSensor)touch))==0)
 		{
 			servo[mouth]=mouthdown;
+			servo[rightmandible] = openwideR;
+			servo[leftmandible] = openwideL;
 			motor[elevator1]= -90;
 			motor[elevator2]= -90;
 		}
