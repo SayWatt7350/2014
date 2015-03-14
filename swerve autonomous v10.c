@@ -122,8 +122,11 @@ task main()
 	clearDebugStream();
 	while(true)
 	{
-	HTCS2readRGB(colorport, r, g,b);
-	writeDebugStream("R:%d, G:%d, B:%d\n", r,g,b);
+	if(!HTCS2readRGB(colorport, r, g,b))
+	{
+		writeDebugStream("BAD\n");
+}
+	writeDebugStream("%d, %d, %d\n", r,g,b);
 	//writeDebugStream("----------------\n");
 	wait1Msec(1000);
 	}
