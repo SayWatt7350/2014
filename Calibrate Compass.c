@@ -400,10 +400,10 @@ task main () {
 	startCalibration();
 	StartTask(showPulse);
 
-	for(int x=0; x<540;x++)
+	for(int x=0; x<180;x++)
 	{
 		turnleft();
-		wait1Msec(37);
+		wait1Msec(111);
 
 	}
 	eraseDisplay();

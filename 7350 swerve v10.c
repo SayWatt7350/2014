@@ -30,193 +30,22 @@
 
 
 #include "hitechnic-irseeker-v2.h";//3rd party driver for the ir sensor
-#include "joystickdriver.c"
-#include "hitechnic-sensormux.h"    //Use the path where you put Xander's drivers
+#include "JoystickDriver.c"
+#include "hitechnic-sensormux.h"
 #include "hitechnic-compass.h"
 #include "lego-touch.h"
-//#include "swerve functions.c"
+#include "C:\Users\Sam\Documents\GitHub\2014\swerve functions.h"
 
-const tMUXSensor HTIRS2 = msensor_S4_4;
-const tMUXSensor touch = msensor_S4_2;
-
-
-
+#define touch msensor_S4_2
+#define HTIRS2 msensor_S4_4
+#define colorport msensor_S4_1
 
 
-//constants
-const int DEADZONE = 40;
-const int MAX_MOTOR_VAL = 100;
-const float MAX_JOY_VAL = 127.0;
 
 
-/*int scaleForMotor(int joyVal) //taken from l0jec's post on http://www.chiefdelphi.com/forums/archive/index.php/t-78636.html
-//this is an exponential drive
-{
-//check for deadzone
-if(abs(joyVal) < DEADZONE)
-{
-return 0;
-}
-
-//calculate scaled value
-int sign = joyVal / abs(joyVal); // 1 or -1
-float ratio = ((joyVal * joyVal) / (MAX_JOY_VAL * MAX_JOY_VAL));
-int scaledVal = (sign * MAX_MOTOR_VAL) * ratio;
-
-return scaledVal;
-}
-*/
-
-#include "JoystickDriver.c"
-
-//
-//   turnServos will turn the servos to one of five positions, then wait 150ms to adjust if lastpos is different then intended position.
-//		turnpos =
-//				1 = straight
-//				2 = spin turn
-//				3 = 45 degree angle to right
-//				4 = 45 degree angle to left
-//				5 = sideways
-//
 
 
-void turnServos(int turnpos, int lastpos)
-{
 
-		int FRStraight = 161;
-		int BRStraight = 132;
-		int FLStraight = 110;
-		int BLStraight = 159;
-
-		int FRLeft = 107;
-		int BRLeft = 100;
-		int FLLeft = 76;
-		int BLLeft = 99;
-
-		int FRRight = 219;
-		int BRRight = 167;
-		int FLRight = 144;
-		int BLRight = 241;
-
-		int FRSide = 49;
-		int BRSide = 203;
-		int FLSide = 179;
-		int BLSide = 42;
-/*
-	servoChangeRate[RightFront]=1;
-	servoChangeRate[LeftFront]=1;
-	servoChangeRate[LeftBack]=1;
-	servoChangeRate[RightBack]=1;
-*/
-
-	if (lastpos != turnpos)    // Only execute if the new position is different than the old position. otherwise return.
-	{
-		//   straight defaults
-		// define temporary variables servo default is straight.
-		int sFRS = 161;
-		int sBRS = 154;
-		int sFLS = 132;
-		int sBLS = 131;
-
-		//  Motors set to stop
-		int mFRS =0;
-		int mBRS = 0;
-		int mFLS  = 0;
-		int mBLS = 0;
-		//
-		// first, stop motors so don't create strain on servos.
-		//
-		motor[RightFront] = mFRS;
-		motor[LeftFront] = mFLS;
-		motor[RightBack] = mBRS;
-		motor[LeftBack] = mBLS;
-
-
-		switch (turnpos)
-		{
-		case 1:							// gostraight
-			sFRS = FRStraight;
-			sBRS = BRStraight;
-			sFLS = FLStraight;
-			sBLS = BLStraight;
-			break;
-
-		case 2:							// spin
-			sFRS = FRLeft;				//   						\  	u
-			sBRS = BRRight;				//  						/	 	u
-			sFLS = FLRight;				//		/							u
-			sBLS = BLLeft;				//		\							u
-			// set motors direction to help servos and turn same direction as servo.
-			if (lastpos == 1)  // straight to spin
-			{
-				mFRS = mBLS = -30;
-				mFLS = mBLS = 30;
-			} else if (lastpos == 5)  // sideways to spin
-			{
-				mFRS = mBLS = 30;
-				mFLS = mBLS = -30;
-			}
-
-			break;
-
-		case 3:				// 45 degree turn to right  ???
-			sFRS = FRRight;				//   						/
-			sBRS = BRRight;				//  						/
-			sFLS = FLRight;				//		/
-			sBLS = BLRight;				//	 ??? /
-			break;
-
-
-		case 4:				// 45 degree turn to left ???
-			sFRS = FRLeft;				//   						\		u
-			sBRS = BRLeft;				//  						\		u
-			sFLS = FLLeft;				//		\							u
-			sBLS = BLLeft;				//	  \							u
-			break;
-
-		case 5:				// sideways ???
-			sFRS = FRSide;				//   						->
-			sBRS = BRSide;				//  						->
-			sFLS = FLSide;				//		->
-			sBLS = BLSide;				//	  ->
-			break;
-
-		default:			// gostraight
-
-			sFRS = FRStraight;
-			sBRS = BRStraight;
-			sFLS = FLStraight;
-			sBLS = BLStraight;
-			break;
-		}   // end of switch
-
-		// turn motor to help servo turn or leave it stopped
-		motor[RightFront] = mFRS;
-		motor[LeftFront] = mFLS;
-		motor[RightBack] = mBRS;
-		motor[LeftBack] = mBLS;
-
-		//
-		//  now turn servos
-		//
-		servo[frontRS]= sFRS;
-		servo[backRS]= sBRS;
-		servo[frontLS]= sFLS;
-		servo[backLS]= sBLS;
-		wait1Msec(150);		// only do this if changing servo pos.   if same as last time, then skip.
-
-		//
-		// Now, stop motors.  Will be restarted in new direction.
-		//
-		motor[RightFront] = 0;
-		motor[LeftFront] = 0;
-		motor[RightBack] = 0;
-		motor[LeftBack] = 0;
-	}
-
-	lastpos = turnpos;
-	return;
-}
 
 
 
@@ -282,10 +111,8 @@ task main()
 	//
 	//  wheels  go straight to start
 	//
-	servo[frontRS]= straight_FRS;
-	servo[backRS]= straight_BRS;
-	servo[frontLS]= straight_FLS;
-	servo[backLS]= straight_BLS;
+	turnServos(1,0);
+
 	//servo[mouth]= mouthup;
 	servo[mouth]= mouthdown;
 	int lastservopos = 0;   // 1 = straight, 2 = spin , 3 = turn 45 deg to right, 4 = turn 45degrees to left, 5 = turn wheels to side
@@ -390,8 +217,8 @@ task main()
 			servo[leftmandible] = openwideL;
 		}
 
-//jiggle the mouth
-				if(joy1Btn(3))
+		//jiggle the mouth
+		if(joy1Btn(3))
 		{
 			servo[rightmandible] = outR;  // open mandibles so they don't hit elevator
 			servo[leftmandible] = outL;
@@ -420,7 +247,7 @@ task main()
 
 		// lower elevator
 
-		else if((joystick.joy2_y2) < -threshold && TSreadState(((tMUXSensor)touch))==0)
+		else if((joystick.joy2_y2) < -threshold && TSreadState(touch)==0)
 		{
 			servo[mouth]=mouthdown;
 			servo[rightmandible] = openwideR;
