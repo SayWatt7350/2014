@@ -14,23 +14,23 @@ void turnServos(int turnpos, int lastpos)
 {
 
 	int FRStraight = 161;
-	int BRStraight = 115;
-	int FLStraight = 108;
+	int BRStraight = 103;
+	int FLStraight = 119;
 	int BLStraight = 159;
 
 	int FRLeft = 107;
-	int BRLeft = 78;
-	int FLLeft = 76;
+	int BRLeft = 71;
+	int FLLeft = 83;
 	int BLLeft = 99;
 
 	int FRRight = 219;
-	int BRRight = 151;
-	int FLRight = 149;
+	int BRRight = 140;
+	int FLRight = 155;
 	int BLRight = 241;
 
 	int FRSide = 49;
-	int BRSide = 188;
-	int FLSide = 179;
+	int BRSide = 177;
+	int FLSide = 190;
 	int BLSide = 42;
 	/*
 	servoChangeRate[RightFront]=1;

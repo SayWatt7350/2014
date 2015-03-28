@@ -159,22 +159,54 @@ void gostraight(int distance)
 void godirection(int direction, int distance)
 {
 
-	int speed=90*distance/abs(distance);
+	int rfspeed=90*distance/abs(distance);
+	int rbspeed=90*distance/abs(distance);
+	int lfspeed=90*distance/abs(distance);
+	int lbspeed=90*distance/abs(distance);
+
+
 
 	int clicks=1440*3*PI*distance/128;
 
 	turnServos(direction, 0);//forces servos to change
 
 
+	if(direction==4)
+	{
+		rfspeed/=90;
+		rfspeed*=100;
+}
+
+if(direction==3)
+{
+		lfspeed/=90;
+		lfspeed*=100;
+}
+
+
+/*
+	switch(direction)
+	{
+		case 1:break;//do nothing already good
+		case 2:
+		rbspeed=lfspeed=-rfspeed;
+		break;
+		case 3:
+
+	break;
+}
+
+	*/
+
 
 	nMotorEncoder[RightFront] = 0;
 
 	while(abs(nMotorEncoder[RightFront]) < abs(clicks))
 	{
-		motor[RightFront] = speed;
-		motor[RightBack] = speed;
-		motor[LeftFront] = speed;
-		motor[LeftBack] = speed;
+		motor[RightFront] = rfspeed;
+		motor[RightBack] = rbspeed;
+		motor[LeftFront] = lfspeed;
+		motor[LeftBack] = lbspeed;
 		wait1Msec(25);
 	}
 	motor[RightFront] = 0;

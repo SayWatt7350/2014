@@ -33,9 +33,10 @@
 #include "hitechnic-sensormux.h"    //Use the path where you put Xander's drivers
 #include "hitechnic-compass.h"
 #include "lego-touch.h"
+#include "..\..\swerve functions.h"
 //#include "swerve functions.c"
 
-const tMUXSensor touch = msensor_S4_2;
+
 
 
 
@@ -44,43 +45,124 @@ task main()
 
 	int mouthdown=214;
 
-disableDiagnosticsDisplay();
-eraseDisplay();
-nxtDisplayCenteredBigTextLine(1,"Lift");
-nxtDisplayCenteredBigTextLine(3,"Utility");
-nxtDisplayCenteredBigTextLine(6,"Down  Up");
-//nxtDisplayCenteredBigTextLine(3," LEFT=DOWN");
+	disableDiagnosticsDisplay();
+	eraseDisplay();
+	nxtDisplayCenteredBigTextLine(1,"Wheel");
+	nxtDisplayCenteredBigTextLine(3,"Mover");
+
+
+
+	int x=1;
+
+	int wheel=1;
+
+	turnServos(1,0);
+
+
+	while(true)
+		{
+
+		if(nNxtButtonPressed==1)
+		{//right button
+
+		wheel++;
+			if(wheel<1)
+			{
+
+				wheel+=4;
+			}
+			if(wheel>4)
+			{
+
+				wheel-=4;
+			}
+
+			wait1Msec(300);
+		}
+		// lower elevator
+		else if(nNxtButtonPressed==2)
+		{//left button
+
+		wheel--;
+			if(wheel<1)
+			{
+
+				wheel+=4;
+			}
+			if(wheel>4)
+			{
+
+				wheel-=4;
+			}
+			wait1Msec(300);
+
+	`	}
+
+
+
+		if(nNxtButtonPressed==3)
+		{//middle button
+			break;
+		}
+
+
+		//nxtDisplayCenteredTextLine(6,"%d",wheel);
+		switch(wheel)
+		{
+	case 1:		nxtDisplayCenteredTextLine(6,"FrontLeft"); break;
+	case 2:		nxtDisplayCenteredTextLine(6,"BackLeft"); break;
+	case 3:		nxtDisplayCenteredTextLine(6,"FrontRight"); break;
+	case 4:		nxtDisplayCenteredTextLine(6,"BackRight"); break;
+	}
+
+		}
+
+
+
+		switch(wheel)
+		{
+	case 1:		nxtDisplayCenteredBigTextLine(6,"FrontLeft"); break;
+	case 2:		nxtDisplayCenteredBigTextLine(6,"BackLeft"); break;
+	case 3:		nxtDisplayCenteredBigTextLine(6,"FrontRight"); break;
+	case 4:		nxtDisplayCenteredBigTextLine(6,"BackRight"); break;
+	}
 
 
 	while(true)
 	{
-//nxtDisplayCenteredTextLine(5,"%d", nNxtButtonPressed);
-		if(nNxtButtonPressed==1)
-		{
-			servo[mouth]=mouthdown;
-			motor[elevator1]= 90;//Raises the elevator
-			motor[elevator2]= 90;
+
+
+
+		if(nNxtButtonPressed==1 && x>0)//move wheel position back
+		{//right button
+
+						x++;
+
+
+
+
+
 		}
 		// lower elevator
-		else if(nNxtButtonPressed==2 && TSreadState(((tMUXSensor)touch))==0)
-		{
-			servo[mouth]=mouthdown;
-			motor[elevator1]= -90;
-			motor[elevator2]= -90;
-		}
-		else
-		{
-			motor[elevator1]=0;
-			motor[elevator2]=0;
+		else if(nNxtButtonPressed==2 && x<254)//move wheel position forward
+		{//left button
+
+			x--;
+			if(x<1)
+			{
+
+				x+=5;
+			}
+
+
+			turnServos(x,0);
+			wait1Msec(500);
 		}
 
-		if(nNxtButtonPressed==3)
-		{//middle button
-			nMotorEncoder[elevator1]=0;
-			nMotorEncoder[elevator2]=0;
-		}
-		nxtDisplayCenteredTextLine(5,"%d , %d", nMotorEncoder[elevator1], nMotorEncoder[elevator2]);
 
+		nxtDisplayCenteredTextLine(5,"Servo Value:%d",x);
+
+	}
 
 
 	}

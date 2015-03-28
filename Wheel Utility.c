@@ -43,6 +43,11 @@
 task main()
 {
 
+	servoChangeRate[frontLS]=10;
+	servoChangeRate[frontRS]=10;
+	servoChangeRate[backLS]=10;
+	servoChangeRate[backRS]=10;
+
 	int mouthdown=214;
 
 	disableDiagnosticsDisplay();
@@ -53,6 +58,9 @@ task main()
 	//nxtDisplayCenteredBigTextLine(3," LEFT=DOWN");
 
 	int x=1;
+
+	turnServos(1,0);
+
 	while(true)
 	{
 

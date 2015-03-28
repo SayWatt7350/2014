@@ -25,7 +25,7 @@ int shutL = 0;
 int outL=100;
 int outR=100;
 //  mouth
-int mouthup=74;
+int mouthup=60;
 int mouthdown=214;
 //
 int elevatorposition=0;
