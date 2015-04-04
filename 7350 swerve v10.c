@@ -33,7 +33,7 @@
 #include "hitechnic-sensormux.h"
 #include "hitechnic-compass.h"
 #include "lego-touch.h"
-#include "C:\Users\Sam\Documents\GitHub\2014\swerve functions.h"
+#include "swerve functions.h"
 
 #define touch msensor_S4_2
 #define HTIRS2 msensor_S4_4
