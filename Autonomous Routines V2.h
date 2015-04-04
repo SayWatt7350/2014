@@ -149,11 +149,11 @@ void program4()//knocks down kickstand from parking
 
 void program10()
 {
-	disableDiagnosticsDisplay();
+	disableDiagnosticsDisplay(); //For Testing Purposes
 	getcenterpospark();
 	if(centerpos == 3)
 	{
-		nxtDisplayCenteredBigTextLine(2, "Position 3");
+		nxtDisplayCenteredBigTextLine(2, "Position 3"); //Checks Position - Temp for testing
 		godirection(1,54);
 		turnServos(5,0);
 		wait1Msec(500);
@@ -165,7 +165,7 @@ void program10()
 		StartTask(movefrom0to120);
 		while (!finished)
 		{
-			writeDebugStreamLine("Im Doing Something... Please Try Again Later");
+			writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Checks if task is in progress
 		}
 		turnServos(1,0);
 		godirection(1,1);
@@ -180,7 +180,7 @@ void program10()
 	}
 	else if(centerpos == 2)
 	{
-		nxtDisplayCenteredBigTextLine(2, "Position 2");
+		nxtDisplayCenteredBigTextLine(2, "Position 2"); //Checks Position - Temp for testing
 		godirection(1,24);
 		turnleft90();
 		turnleft45();
@@ -188,7 +188,7 @@ void program10()
 		StartTask(movefrom0to120);
 		while (!finished)
 		{
-			writeDebugStreamLine("Im Doing Something... Please Try Again Later");
+			writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Testing
 		}
 		turnServos(1,0);
 		wait1Msec(500);
@@ -204,7 +204,7 @@ void program10()
 	}
 	else if(centerpos ==3)
 	{
-		nxtDisplayCenteredBigTextLine(2,"Position 1");
+		nxtDisplayCenteredBigTextLine(2,"Position 1"); //Checks Position - Temp for testing
 		godirection(1,24);
 		turnServos(5,0);
 		wait1Msec(500);
@@ -217,7 +217,7 @@ void program10()
 		StartTask(movefrom0to120);
 		while (!finished)
 		{
-			writeDebugStreamLine("Im Doing Something... fuk off");
+			writeDebugStreamLine("Im Doing Something"); //Checks if Task is done - Temp for testing
 		}
 		turnServos(1,0);
 		wait1Msec(500);
