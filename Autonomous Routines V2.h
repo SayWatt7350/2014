@@ -325,3 +325,15 @@ void program21()
 	turnleft45();
 	turnServos(1,0);
 }
+
+void program22()
+{
+	turnServos(5,0);
+	godirection(5,24);
+	turnServos(1,0);
+	wait1Msec(1000);
+	godirection(5,24*5);
+	turnServos(5,0);
+	godirection(5,-24);
+//	writeDebugStream("Done");
+}
