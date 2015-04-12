@@ -175,26 +175,26 @@ void godirection(int direction, int distance)
 	{
 		rfspeed/=90;
 		rfspeed*=100;
-}
+	}
 
-if(direction==3)
-{
+	if(direction==3)
+	{
 		lfspeed/=90;
 		lfspeed*=100;
-}
+	}
 
 
-/*
+	/*
 	switch(direction)
 	{
-		case 1:break;//do nothing already good
-		case 2:
-		rbspeed=lfspeed=-rfspeed;
-		break;
-		case 3:
+	case 1:break;//do nothing already good
+	case 2:
+	rbspeed=lfspeed=-rfspeed;
+	break;
+	case 3:
 
 	break;
-}
+	}
 
 	*/
 
@@ -223,8 +223,8 @@ void getcenterposramp()//returns center piece position when robot is on top of r
 	int irthreshold=58.5;//to decide if position 3 or something else
 	int irthreshold2=10;//to decide if position 2 or 1
 
-	//HTIRS2readAllDCStrength(HTIRS2, acS1, acS2, acS3, acS4, acS5);
-	//HTIRS2readAllACStrength(HTIRS2, acS1, acS2, acS3, acS4, acS5);//used to get ir sensor values
+	//HTIRS2readAllDCStrength(HTIRS2, acS1, acS2, acS3, acS4, acS5);//don't use this one
+	HTIRS2readAllACStrength(HTIRS2, acS1, acS2, acS3, acS4, acS5);//used to get ir sensor values
 
 	if(acS4>irthreshold)//finding position of centerpiece
 	{
@@ -291,17 +291,17 @@ task moveelevator()
 	nMotorEncoder[elevator1] = 0;
 	nMotorEncoder[elevator2] = 0;
 
-	writeDebugStream("1:%d  2:%d\nClicks:%d\n",nMotorEncoder[elevator1], nMotorEncoder[elevator2], clicks);
+	/*writeDebugStream("1:%d  2:%d\nClicks:%d\n",nMotorEncoder[elevator1], nMotorEncoder[elevator2], clicks);
 	//writeDebugStream("Clicks:%d\n",clicks);
 	if((float)abs(nMotorEncoder[elevator1]) < abs(clicks))
 	{
-		writeDebugStream("WORKING");
+	writeDebugStream("WORKING");
 	}
-	clearDebugStream();
+	clearDebugStream();*/
 	while((float)abs(nMotorEncoder[elevator1]) < abs(clicks) && (float)abs(nMotorEncoder[elevator2]) < abs(clicks))
 	{
-		writeDebugStream("MOVING\n");
-		writeDebugStream("1:%d  2:%d\nClicks:%d\n",nMotorEncoder[elevator1], nMotorEncoder[elevator2], clicks);
+		//writeDebugStream("MOVING\n");
+		//writeDebugStream("1:%d  2:%d\nClicks:%d\n",nMotorEncoder[elevator1], nMotorEncoder[elevator2], clicks);
 
 		motor[elevator1]= 90;//Raises the elevator
 		motor[elevator2]= 90;
@@ -431,7 +431,7 @@ task movefrom0to120()
 
 
 
-void compassturn(int degrees)//positive degrees means left
+/*void compassturn(int degrees)//positive degrees means left
 {															//negative degrees means right
 	int speed= 70*(degrees/abs(degrees));
 
@@ -446,11 +446,11 @@ void compassturn(int degrees)//positive degrees means left
 
 	HTMCsetTarget(compass);
 	HTMCsetTarget(compass,0);
-	writeDebugStream("compass:%d\n",HTMCreadHeading(compass));
+	//writeDebugStream("compass:%d\n",HTMCreadHeading(compass));
 
 	int clicks=1440*3*PI/720*degrees;
 
-	clearDebugStream();
+	//clearDebugStream();
 
 	nMotorEncoder[RightBack] = 0;
 	nMotorEncoder[RightFront] = 0;
@@ -463,25 +463,25 @@ void compassturn(int degrees)//positive degrees means left
 	int wantedheading=HTMCreadRelativeHeading(compass);//returns value between -179 to 180
 	if(wantedheading<0)
 	{
-wantedheading-=360;
-}
+		wantedheading-=360;
+	}
 
-if(wantedheading<360)
+	if(wantedheading<360)
 	{
-wantedheading+=360;
-}
+		wantedheading+=360;
+	}
 
-clearDebugStream();
+	//clearDebugStream();
 
-	writeDebugStream("compass:%d\n",(HTMCreadHeading(compass)));
+	//writeDebugStream("compass:%d\n",(HTMCreadHeading(compass)));
 
 	HTMCsetTarget(compass,0);
 	while(//abs(nMotorEncoder[RightBack]) < abs(clicks)
 		//&& abs(nMotorEncoder[LeftFront]) < abs(clicks)
-	/*&&*/ HTMCreadRelativeHeading(compass)!=0)//while difference between current heading and wanted heading is greater than 0
+	 HTMCreadRelativeHeading(compass)!=0)//while difference between current heading and wanted heading is greater than 0
 	{
 
-		writeDebugStream("compass:%d\n",HTMCreadRelativeHeading(compass));
+		//writeDebugStream("compass:%d\n",HTMCreadRelativeHeading(compass));
 		motor[RightFront] = speed;
 		motor[RightBack] = speed;
 		motor[LeftFront] = -speed;
@@ -524,8 +524,11 @@ void compassstraight(int direction, int distance)
 
 	if(compassthreshold>360)
 	{
-compassthreshold-=360;
-}
+		compassthreshold-=360;
+	}
+
+
+
 
 
 
@@ -542,7 +545,9 @@ compassthreshold-=360;
 			nxtDisplayCenteredTextLine(2,"%d, %d",HTMCreadHeading(compass), current);
 			if(HTMCreadHeading(compass)>current)
 			{
-				writeDebugStream("Left side faster\n");
+				//				writeDebugStream("Left side faster\n");
+
+
 
 
 
@@ -552,7 +557,7 @@ compassthreshold-=360;
 				motor[LeftBack] = (speed+offset);//drive side faster at the rate of the difference between current and wanted compass degree
 			}	else if(HTMCreadHeading(compass)<current)
 			{
-				writeDebugStream("Right side faster\n");
+				//			writeDebugStream("Right side faster\n");
 
 
 
@@ -567,15 +572,24 @@ compassthreshold-=360;
 				motor[RightBack] = speed;
 				motor[LeftFront] = speed;
 				motor[LeftBack] = speed;
-			}
+
+				}
 		}
+
 	}
+
+
 	else
+
 	{
-		//abs so can be positive and negative
-		while(abs(nMotorEncoder[RightBack]) < abs(clicks)	&& abs(nMotorEncoder[LeftFront]) < abs(clicks))//while difference between current heading and wanted heading is greater than 0
-		{
-			if(HTMCreadHeading(compass)>180)
+
+	//abs so can be positive and negative
+
+	while(abs(nMotorEncoder[RightBack]) < abs(clicks)	&& abs(nMotorEncoder[LeftFront]) < abs(clicks))//while difference between current heading and wanted heading is greater than 0
+
+	{
+
+	if(HTMCreadHeading(compass)>180)
 			{
 
 				motor[RightFront] = (speed-offset);//drive side faster at the rate of the difference between current and wanted compass degree
@@ -592,8 +606,14 @@ compassthreshold-=360;
 
 			}else if(HTMCreadHeading(compass)==180)
 			{
-				writeDebugStream("both sides equal\n");
+
+
+
+
+			writeDebugStream("both sides equal\n");
 				motor[RightFront] = speed;
+
+
 				motor[RightBack] = speed;
 				motor[LeftFront] = speed;
 				motor[LeftBack] = speed;
@@ -607,5 +627,121 @@ compassthreshold-=360;
 	motor[RightBack] = 0;
 	motor[LeftFront] = 0;
 	motor[LeftBack] = 0;
+
+}
+
+*/
+
+void turnGYRO(int angle, short speed)
+{
+
+	turnServos(2,0);
+	//turnServos(5,0);
+
+	//IMPORTANT
+
+	wait1Msec(400);//let servos turn
+
+	//IMPORTANT
+
+	ClearTimer(T1);	// use timer so if jammed, don't burn out motors
+	angle *= -1;
+	if (angle < 0)
+
+{
+		angle *= -1;
+		speed *= -1;
+
+		}
+	wait1Msec(200);  // needed to let sensor settle
+
+	//  This is to adjust so works correctly with our robot.
+	angle = (angle * 151) / 90;
+
+	HTGYROstartCal(GYRO);
+	wait1Msec(200);
+	int gyro[3] = {0,0,0};
+	int gyroMid[3] = {0,0,0};
+	int gyroFinal[4] = {0,0,0,0};
+//Hello World
+
+	motor[RightFront] = -speed;
+	motor[RightBack] = -speed;
+	motor[LeftFront] = speed;
+	motor[LeftBack] = speed;
+
+
+	int integral = 0;
+	while ((time1[T1] < 2100))  // try to turn for up to 2 seconds
+	{
+		for (int i = 2; i > 0; --i)
+			gyro[i] = gyro[i-1];
+		gyro[0] = HTGYROreadRot(GYRO);
+
+		float mu = 10.0/11.0;
+
+		gyroMid[0] = gyro[0];
+		for (int i = 1; i < 3; ++i)
+			gyroFinal[i] = mu * (gyro[i] - gyroMid[i-1]) + gyroMid[i-1];
+
+		for (int i = 3; i > 0; --i)
+		gyroFinal[i] = gyroMid[i-1];
+		gyroFinal[0] = gyroMid[1];
+
+		integral += (gyroFinal[0] + gyroFinal[1]*2 + gyroFinal[2]*2 + gyroFinal[3])/6;
+
+		//writeDebugStreamLine("%d", integral);
+		if (abs(integral * 0.0604) > angle) break;
+		wait1Msec(10);
+	}
+	motor[RightFront] = 0;
+	motor[RightBack] = 0;
+	motor[LeftFront] = 0;
+	motor[LeftBack] = 0;
+}
+
+
+task recordanglechange()
+{
+
+
+	wait1Msec(200);  // needed to let sensor settle
+
+
+	HTGYROstartCal(GYRO);
+	wait1Msec(200);
+	int gyro[3] = {0,0,0};
+	int gyroMid[3] = {0,0,0};
+	int gyroFinal[4] = {0,0,0,0};
+
+
+
+
+
+	int integral = 0;
+	while (true)  // try to turn for up to 2 seconds - was 2100
+	{
+		for (int i = 2; i > 0; --i)
+			gyro[i] = gyro[i-1];
+		gyro[0] = HTGYROreadRot(GYRO);
+
+		float mu = 10.0/11.0;
+
+		gyroMid[0] = gyro[0];
+		for (int i = 1; i < 3; ++i)
+			gyroFinal[i] = mu * (gyro[i] - gyroMid[i-1]) + gyroMid[i-1];
+
+		for (int i = 3; i > 0; --i)
+			gyroFinal[i] = gyroMid[i-1];
+		gyroFinal[0] = gyroMid[1];
+
+		integral += (gyroFinal[0] + gyroFinal[1]*2 + gyroFinal[2]*2 + gyroFinal[3])/6;
+
+		//writeDebugStreamLine("%d", abs(integral)*0.0604);
+		//if (abs(integral * 0.0604) > angle) break;
+		wait1Msec(10);
+	}
+
+
 
 }

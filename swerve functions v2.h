@@ -128,8 +128,8 @@ void turnServos(int turnpos, int lastpos)
 		//
 		//  now turn servos
 		//
-		servo[backRS]= sBRS;
 		servo[frontRS]= sFRS;
+		servo[backRS]= sBRS;
 		servo[frontLS]= sFLS;
 		servo[backLS]= sBLS;
 		wait1Msec(250);		// only do this if changing servo pos.   if same as last time, then skip.
