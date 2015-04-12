@@ -66,12 +66,12 @@ task main()
 	1		ramp		|drop ball in small goal and move to parking
 	2		parking	|drop ball in small goal and move to parking//values not tested
 	3		parking	|score in center goal
-	4		parking	|knocks down kickstand
+	4			      |
 	5						|
 	6						|
 	7						|
 	8						|
-	9						|
+	9		parking	|knocks down kickstand
 	10	ramp		|scores in mid and knocks kickstand(With IR)
 	11	ramp		|drop ball in small goal and move to parking(with compass)
 	12	parking	|drop ball in small goal and move to parking//values not tested
@@ -244,7 +244,7 @@ task main()
 	PlaySound(soundBeepBeep);
 	PlaySound(soundBeepBeep);
 
-		waitForStart();
+//		waitForStart();
 	servo[gate]=gatedrive;
 
 
@@ -305,7 +305,7 @@ task main()
 	//program1();
 	//turnServos(2,0);
 	//wait1Msec(5000);
-	program25();
+	program9();
 
 
 
