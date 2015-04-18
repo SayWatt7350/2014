@@ -30,7 +30,12 @@
 
 #define touch msensor_S4_2
 #define HTIRS2 msensor_S4_4
-//#define colorport msensor_S4_1
+#define eopd1 msensor_S4_3
+#define ultrasound msensor_S4_1
+#define eopd2 msensor_S4_1
+#define USING_2_EOPD 1
+#define NUMBER_OF_PROGRAMS 31
+
 
 
 #include "hitechnic-sensormux.h" //THIS MUST BE THE FIRST #INCLUDE
@@ -39,9 +44,12 @@
 #include "hitechnic-compass.h"
 #include "hitechnic-colour-v2.h"
 #include "hitechnic-gyro.h"
+#include "hitechnic-eopd.h"
+#include "lego-ultrasound.h"
 #include "..\..\autonomous variables.h"
 #include "..\..\swerve functions v2.h"
 #include "..\..\swerve autonomous functions.h"
+//#include "..\..\Autonomous Routines v3.h"
 #include "..\..\Parking Routines v3.h"
 //.. means go up a directory
 //these are in the github directory
@@ -71,7 +79,7 @@ task main()
 	6						|
 	7						|
 	8						|
-	9		parking	|knocks down kickstand
+	9		parking	|knocks down kickstand & scores in mid w/ IR
 	10	ramp		|scores in mid and knocks kickstand(With IR)
 	11	ramp		|drop ball in small goal and move to parking(with compass)
 	12	parking	|drop ball in small goal and move to parking//values not tested
@@ -80,8 +88,9 @@ task main()
 	15	anywhere|go straight 6 feet (can get of ramp)
 	21	ramp		|drop ball in small goal and move to parking (BACKWARDS)
 	*/
-	//wait1Msec(2000);
+
 	//	disableDiagnosticsDisplay();
+	/*
 	short colorValues[4];//these are the scanned values
 
 	int j;
@@ -89,7 +98,7 @@ task main()
 	long g;
 	long b;
 	//	wait1Msec(500);
-
+	*/
 	int minDifference = 32767; // MAX_INT
 	int selectedColor = 0;//this is the color closest to the scanned color
 	servo[gate]=gateup;
@@ -107,6 +116,25 @@ task main()
 	servo[frontLS]= sFLS;
 	servo[backLS]= sBLS;
 	wait1Msec(500);
+
+//Test to see if ultrasound exists
+/*
+	ClearTimer(T3);
+		while (true)
+			{
+				if (time1[T3] < 10000) && (ultrasound < 25)
+					{
+						PlaySound(soundBeepBeep);
+						ultrasoundexists = 1;
+					}
+				else if (time1[T3] >= 10000)
+					{
+						ultrasoundexists = 0;
+					{
+			}
+
+
+*/
 
 
 	//servo[leftmandible] = outL;

@@ -745,30 +745,31 @@ task recordanglechange()
 
 
 }
-/*
+
 void lineupcenter()//robot should start with ultrasound facing the
 {
 	int slowspeed=50;
-
-	turnServos(5,0);
-
+	int centergoalthresh=30;
 
 
-	motor[RightFront] = slowspeed;
-	motor[RightBack] = slowspeed;
-	motor[LeftFront] = slowspeed;
-	motor[LeftBack] = slowspeed;
+			turnServos(5,0);
 
+			motor[RightFront] = slowspeed;
+			motor[RightBack] = slowspeed;
+			motor[LeftFront] = slowspeed;
+			motor[LeftBack] = slowspeed;
 
+			ClearTimer(T4);
 
-	while(true)
-	{
-		if(1)
-		{
+			//  Let it go until we see centergoal
+			while((ultrasound > centergoalthresh) && (time1[T4] < 6000)) //While not found Mid and Timer < 6 seconds
+			{
+				wait1Msec(1);
+			}
 
+			PlaySound(soundBeepBeep);
+			motor[RightFront] = 0;
+			motor[RightBack] = 0;
+			motor[LeftFront] = 0;
+			motor[LeftBack] = 0;
 		}
-	}
-
-
-
-}*/
