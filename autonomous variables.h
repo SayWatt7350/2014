@@ -115,4 +115,4 @@ int eopd1threshold=16;
 int eopd2threshold=16;
 
 
-int selectprgm=0;
+int selectprgm=1;
