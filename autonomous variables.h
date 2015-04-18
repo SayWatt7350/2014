@@ -110,3 +110,9 @@ string colornames[15]={//declaration of all the names
 	"Pink",
 	"Black",
 };
+
+int eopd1threshold=16;
+int eopd2threshold=16;
+
+
+int selectprgm=1;

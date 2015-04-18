@@ -433,200 +433,200 @@ task movefrom0to120()
 
 /*void compassturn(int degrees)//positive degrees means left
 {															//negative degrees means right
-	int speed= 70*(degrees/abs(degrees));
+int speed= 70*(degrees/abs(degrees));
 
-	turnServos(2,0);//forces servos to turn
-	if(degrees<0)
-	{
-		degrees+=360;
-	}
-	//writeDebugStream("degrees:%d\n",degrees);
+turnServos(2,0);//forces servos to turn
+if(degrees<0)
+{
+degrees+=360;
+}
+//writeDebugStream("degrees:%d\n",degrees);
 
-	//HTMCsetTarget(compass, degrees);
+//HTMCsetTarget(compass, degrees);
 
-	HTMCsetTarget(compass);
-	HTMCsetTarget(compass,0);
-	//writeDebugStream("compass:%d\n",HTMCreadHeading(compass));
+HTMCsetTarget(compass);
+HTMCsetTarget(compass,0);
+//writeDebugStream("compass:%d\n",HTMCreadHeading(compass));
 
-	int clicks=1440*3*PI/720*degrees;
+int clicks=1440*3*PI/720*degrees;
 
-	//clearDebugStream();
+//clearDebugStream();
 
-	nMotorEncoder[RightBack] = 0;
-	nMotorEncoder[RightFront] = 0;
-	nMotorEncoder[LeftBack] = 0;
-	nMotorEncoder[LeftFront] = 0;
-	HTMCsetTarget(compass,0);
-	HTMCsetTarget(compass,0);
-	HTMCsetTarget(compass,0);
-	//int wantedheading=HTMCreadHeading(compass)+degrees;
-	int wantedheading=HTMCreadRelativeHeading(compass);//returns value between -179 to 180
-	if(wantedheading<0)
-	{
-		wantedheading-=360;
-	}
+nMotorEncoder[RightBack] = 0;
+nMotorEncoder[RightFront] = 0;
+nMotorEncoder[LeftBack] = 0;
+nMotorEncoder[LeftFront] = 0;
+HTMCsetTarget(compass,0);
+HTMCsetTarget(compass,0);
+HTMCsetTarget(compass,0);
+//int wantedheading=HTMCreadHeading(compass)+degrees;
+int wantedheading=HTMCreadRelativeHeading(compass);//returns value between -179 to 180
+if(wantedheading<0)
+{
+wantedheading-=360;
+}
 
-	if(wantedheading<360)
-	{
-		wantedheading+=360;
-	}
+if(wantedheading<360)
+{
+wantedheading+=360;
+}
 
-	//clearDebugStream();
+//clearDebugStream();
 
-	//writeDebugStream("compass:%d\n",(HTMCreadHeading(compass)));
+//writeDebugStream("compass:%d\n",(HTMCreadHeading(compass)));
 
-	HTMCsetTarget(compass,0);
-	while(//abs(nMotorEncoder[RightBack]) < abs(clicks)
-		//&& abs(nMotorEncoder[LeftFront]) < abs(clicks)
-	 HTMCreadRelativeHeading(compass)!=0)//while difference between current heading and wanted heading is greater than 0
-	{
+HTMCsetTarget(compass,0);
+while(//abs(nMotorEncoder[RightBack]) < abs(clicks)
+//&& abs(nMotorEncoder[LeftFront]) < abs(clicks)
+HTMCreadRelativeHeading(compass)!=0)//while difference between current heading and wanted heading is greater than 0
+{
 
-		//writeDebugStream("compass:%d\n",HTMCreadRelativeHeading(compass));
-		motor[RightFront] = speed;
-		motor[RightBack] = speed;
-		motor[LeftFront] = -speed;
-		motor[LeftBack] = -speed;
-	}
+//writeDebugStream("compass:%d\n",HTMCreadRelativeHeading(compass));
+motor[RightFront] = speed;
+motor[RightBack] = speed;
+motor[LeftFront] = -speed;
+motor[LeftBack] = -speed;
+}
 
-	//if(abs(nMotorEncoder[RightBack]) < abs(clicks) || abs(nMotorEncoder[LeftFront]) < abs(clicks))
-	{
-		//writeDebugStream("\nEXITED BECAUSE OF ENCODER\n");
-	}
+//if(abs(nMotorEncoder[RightBack]) < abs(clicks) || abs(nMotorEncoder[LeftFront]) < abs(clicks))
+{
+//writeDebugStream("\nEXITED BECAUSE OF ENCODER\n");
+}
 
 
 
-	motor[RightFront] = 0;
-	motor[RightBack] = 0;
-	motor[LeftFront] = 0;
-	motor[LeftBack] = 0;
+motor[RightFront] = 0;
+motor[RightBack] = 0;
+motor[LeftFront] = 0;
+motor[LeftBack] = 0;
 
 }
 
 void compassstraight(int direction, int distance)
 {
 
-	int speed= 50*(distance/abs(distance));
-	int offset=50;
-	turnServos(direction,0);//forces servos to turn
-	wait1Msec(100);
+int speed= 50*(distance/abs(distance));
+int offset=50;
+turnServos(direction,0);//forces servos to turn
+wait1Msec(100);
 
 
-	int clicks=1440*3*PI*distance/128;
+int clicks=1440*3*PI*distance/128;
 
-	for(int x=0; x<100; x++)//need to reset compass several times or else it doesn't work
-	{
-		HTMCsetTarget(compass,0);
-	}
+for(int x=0; x<100; x++)//need to reset compass several times or else it doesn't work
+{
+HTMCsetTarget(compass,0);
+}
 
-	int current=HTMCreadHeading(compass);
-	int compassthreshold=current+180;
-	//int lower=middle-180;
+int current=HTMCreadHeading(compass);
+int compassthreshold=current+180;
+//int lower=middle-180;
 
-	if(compassthreshold>360)
-	{
-		compassthreshold-=360;
-	}
-
-
-
-
-
-
-
-	nMotorEncoder[RightBack] = 0;
-	nMotorEncoder[RightFront] = 0;
-	nMotorEncoder[LeftBack] = 0;
-	nMotorEncoder[LeftFront] = 0;
-	if(distance>0)
-	{
-		//abs so can be positive and negative
-		while(abs(nMotorEncoder[RightBack]) < abs(clicks)	&& abs(nMotorEncoder[LeftFront]) < abs(clicks))//while difference between current heading and wanted heading is greater than 0
-		{
-			nxtDisplayCenteredTextLine(2,"%d, %d",HTMCreadHeading(compass), current);
-			if(HTMCreadHeading(compass)>current)
-			{
-				//				writeDebugStream("Left side faster\n");
+if(compassthreshold>360)
+{
+compassthreshold-=360;
+}
 
 
 
 
 
-				motor[RightFront] = speed;
-				motor[RightBack] = speed;
-				motor[LeftFront] = (speed+offset);//drive side faster at the rate of the difference between current and wanted compass degree
-				motor[LeftBack] = (speed+offset);//drive side faster at the rate of the difference between current and wanted compass degree
-			}	else if(HTMCreadHeading(compass)<current)
-			{
-				//			writeDebugStream("Right side faster\n");
 
 
-
-				motor[RightFront] = (speed+offset);//drive side faster at the rate of the difference between current and wanted compass degree
-				motor[RightBack] = (speed+offset);//drive side faster at the rate of the difference between current and wanted compass degree
-				motor[LeftFront] = speed;
-				motor[LeftBack] = speed;
-			}else if(HTMCreadHeading(compass)==current)
-			{
-				writeDebugStream("both sides equal\n");
-				motor[RightFront] = speed;
-				motor[RightBack] = speed;
-				motor[LeftFront] = speed;
-				motor[LeftBack] = speed;
-
-				}
-		}
-
-	}
-
-
-	else
-
-	{
-
-	//abs so can be positive and negative
-
-	while(abs(nMotorEncoder[RightBack]) < abs(clicks)	&& abs(nMotorEncoder[LeftFront]) < abs(clicks))//while difference between current heading and wanted heading is greater than 0
-
-	{
-
-	if(HTMCreadHeading(compass)>180)
-			{
-
-				motor[RightFront] = (speed-offset);//drive side faster at the rate of the difference between current and wanted compass degree
-				motor[RightBack] = (speed-offset);//drive side faster at the rate of the difference between current and wanted compass degree
-				motor[LeftFront] = speed;
-				motor[LeftBack] = speed;
-
-			}	else if(HTMCreadHeading(compass)<180)
-			{
-				motor[RightFront] = speed;
-				motor[RightBack] = speed;
-				motor[LeftFront] = (speed-offset);//drive side faster at the rate of the difference between current and wanted compass degree
-				motor[LeftBack] = (speed-offset);//drive side faster at the rate of the difference between current and wanted compass degree
-
-			}else if(HTMCreadHeading(compass)==180)
-			{
+nMotorEncoder[RightBack] = 0;
+nMotorEncoder[RightFront] = 0;
+nMotorEncoder[LeftBack] = 0;
+nMotorEncoder[LeftFront] = 0;
+if(distance>0)
+{
+//abs so can be positive and negative
+while(abs(nMotorEncoder[RightBack]) < abs(clicks)	&& abs(nMotorEncoder[LeftFront]) < abs(clicks))//while difference between current heading and wanted heading is greater than 0
+{
+nxtDisplayCenteredTextLine(2,"%d, %d",HTMCreadHeading(compass), current);
+if(HTMCreadHeading(compass)>current)
+{
+//				writeDebugStream("Left side faster\n");
 
 
 
 
-			writeDebugStream("both sides equal\n");
-				motor[RightFront] = speed;
+
+motor[RightFront] = speed;
+motor[RightBack] = speed;
+motor[LeftFront] = (speed+offset);//drive side faster at the rate of the difference between current and wanted compass degree
+motor[LeftBack] = (speed+offset);//drive side faster at the rate of the difference between current and wanted compass degree
+}	else if(HTMCreadHeading(compass)<current)
+{
+//			writeDebugStream("Right side faster\n");
 
 
-				motor[RightBack] = speed;
-				motor[LeftFront] = speed;
-				motor[LeftBack] = speed;
-			}
-		}
+
+motor[RightFront] = (speed+offset);//drive side faster at the rate of the difference between current and wanted compass degree
+motor[RightBack] = (speed+offset);//drive side faster at the rate of the difference between current and wanted compass degree
+motor[LeftFront] = speed;
+motor[LeftBack] = speed;
+}else if(HTMCreadHeading(compass)==current)
+{
+writeDebugStream("both sides equal\n");
+motor[RightFront] = speed;
+motor[RightBack] = speed;
+motor[LeftFront] = speed;
+motor[LeftBack] = speed;
+
+}
+}
+
+}
 
 
-	}
+else
 
-	motor[RightFront] = 0;
-	motor[RightBack] = 0;
-	motor[LeftFront] = 0;
-	motor[LeftBack] = 0;
+{
+
+//abs so can be positive and negative
+
+while(abs(nMotorEncoder[RightBack]) < abs(clicks)	&& abs(nMotorEncoder[LeftFront]) < abs(clicks))//while difference between current heading and wanted heading is greater than 0
+
+{
+
+if(HTMCreadHeading(compass)>180)
+{
+
+motor[RightFront] = (speed-offset);//drive side faster at the rate of the difference between current and wanted compass degree
+motor[RightBack] = (speed-offset);//drive side faster at the rate of the difference between current and wanted compass degree
+motor[LeftFront] = speed;
+motor[LeftBack] = speed;
+
+}	else if(HTMCreadHeading(compass)<180)
+{
+motor[RightFront] = speed;
+motor[RightBack] = speed;
+motor[LeftFront] = (speed-offset);//drive side faster at the rate of the difference between current and wanted compass degree
+motor[LeftBack] = (speed-offset);//drive side faster at the rate of the difference between current and wanted compass degree
+
+}else if(HTMCreadHeading(compass)==180)
+{
+
+
+
+
+writeDebugStream("both sides equal\n");
+motor[RightFront] = speed;
+
+
+motor[RightBack] = speed;
+motor[LeftFront] = speed;
+motor[LeftBack] = speed;
+}
+}
+
+
+}
+
+motor[RightFront] = 0;
+motor[RightBack] = 0;
+motor[LeftFront] = 0;
+motor[LeftBack] = 0;
 
 }
 
@@ -648,11 +648,11 @@ void turnGYRO(int angle, short speed)
 	angle *= -1;
 	if (angle < 0)
 
-{
+	{
 		angle *= -1;
 		speed *= -1;
 
-		}
+	}
 	wait1Msec(200);  // needed to let sensor settle
 
 	//  This is to adjust so works correctly with our robot.
@@ -663,7 +663,7 @@ void turnGYRO(int angle, short speed)
 	int gyro[3] = {0,0,0};
 	int gyroMid[3] = {0,0,0};
 	int gyroFinal[4] = {0,0,0,0};
-//Hello World
+	//Hello World
 
 	motor[RightFront] = -speed;
 	motor[RightBack] = -speed;
@@ -685,7 +685,7 @@ void turnGYRO(int angle, short speed)
 			gyroFinal[i] = mu * (gyro[i] - gyroMid[i-1]) + gyroMid[i-1];
 
 		for (int i = 3; i > 0; --i)
-		gyroFinal[i] = gyroMid[i-1];
+			gyroFinal[i] = gyroMid[i-1];
 		gyroFinal[0] = gyroMid[1];
 
 		integral += (gyroFinal[0] + gyroFinal[1]*2 + gyroFinal[2]*2 + gyroFinal[3])/6;
@@ -745,3 +745,30 @@ task recordanglechange()
 
 
 }
+/*
+void lineupcenter()//robot should start with ultrasound facing the
+{
+	int slowspeed=50;
+
+	turnServos(5,0);
+
+
+
+	motor[RightFront] = slowspeed;
+	motor[RightBack] = slowspeed;
+	motor[LeftFront] = slowspeed;
+	motor[LeftBack] = slowspeed;
+
+
+
+	while(true)
+	{
+		if(1)
+		{
+
+		}
+	}
+
+
+
+}*/

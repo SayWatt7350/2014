@@ -122,42 +122,65 @@ void program2()
 
 
 
-void program4()//knocks down kickstand from parking
+void program9()//knocks down kickstand from parking
 {
+	clearDebugStream();
 	getcenterpospark();
-	centerpos=2;
-
+	//HAS TO BE BACKWARDS
 	if(centerpos==1)
 	{
+		writeDebugStreamLine("Park 1");
+		godirection(1,-24);
+		//		turnGYRO(180,90);
+		godirection(5,6);
+		godirection(1,4);
+		//ELEVATOR
+		godirection(5,-6);
+		godirection(1,-12);
+		godirection(1,12);
+		godirection(1,-12);
 
 	}
 	else if(centerpos==2)
 	{
-
-		godirection(4,32);
-
-		turnleft45();
-		turnleft90();
-
-
-		godirection(1,-36);
-
+		writeDebugStreamLine("Park 2");
+		/*
+		godirection(1, 24);
+		godirection(5,-24);
+		turnGYRO(135, 90);
+		//ELVATOR RAISE
+		godirection(5,-8);
+		godirection(1,-20);
+		godirection(1,20);
+		godirection(1,-20);
+		*/
 	}
 	else if(centerpos==3)
 	{
-		godirection(4,57);//left diagonal to be on side of pole
-		turnleft90();//turn to be in front of pole
-		godirection(1,-24);//backward to hit pole
+		writeDebugStreamLine("Park 3");
+		/*
+		godirection(1,24);
+		turnGYRO(180,90);
+		godirection(5,35);
+		turnGYRO(90,90);
+		godirection(5,35);
+		godirection(1,-4);
+		//ELEVATOR
+		godirection(5,-5);
+		godirection(1,-12);
+		godirection(1,12);
+		godirection(1,-12);
+		*/
 	}
 }
 
 void program10()
 {
-	disableDiagnosticsDisplay(); //For Testing Purposes
-	getcenterpospark();
+	//	disableDiagnosticsDisplay(); //For Testing Purposes
+	getcenterposramp();
 	if(centerpos == 3)
 	{
-		nxtDisplayCenteredBigTextLine(2, "Position 3"); //Checks Position - Temp for testing
+		//		nxtDisplayCenteredBigTextLine(2, "Position 3"); //Checks Position - Temp for testing
 		godirection(1,54);
 		turnServos(5,0);
 		wait1Msec(500);
@@ -169,7 +192,7 @@ void program10()
 		StartTask(movefrom0to120);
 		while (!finished)
 		{
-			writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Checks if task is in progress
+			//		writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Checks if task is in progress
 		}
 		turnServos(1,0);
 		godirection(1,1);
@@ -184,7 +207,7 @@ void program10()
 	}
 	else if(centerpos == 2)
 	{
-		nxtDisplayCenteredBigTextLine(2, "Position 2"); //Checks Position - Temp for testing
+		//nxtDisplayCenteredBigTextLine(2, "2"); //Checks Position - Temp for testing
 		godirection(1,24);
 		turnleft90();
 		turnleft45();
@@ -192,7 +215,7 @@ void program10()
 		StartTask(movefrom0to120);
 		while (!finished)
 		{
-			writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Testing
+			//writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Testing
 		}
 		turnServos(1,0);
 		wait1Msec(500);
@@ -208,7 +231,7 @@ void program10()
 	}
 	else if(centerpos ==3)
 	{
-		nxtDisplayCenteredBigTextLine(2,"Position 1"); //Checks Position - Temp for testing
+		//nxtDisplayCenteredBigTextLine(2,"Position 1"); //Checks Position - Temp for testing
 		godirection(1,24);
 		turnServos(5,0);
 		wait1Msec(500);
@@ -221,8 +244,11 @@ void program10()
 		StartTask(movefrom0to120);
 		while (!finished)
 		{
-			writeDebugStreamLine("Im Doing Something");
-			writeDebugStreamLine("Im Doing Something"); //Checks if Task is done - Temp for testing
+
+			//writeDebugStreamLine("Im Doing Something");
+
+			//writeDebugStreamLine("Im Doing Something"); //Checks if Task is done - Temp for testing
+
 		}
 		turnServos(1,0);
 		wait1Msec(500);
@@ -242,35 +268,35 @@ void program10()
 /*void program11()
 {
 
-	compassstraight(1,63);//get of ramp
-	//turnServos(4,0);//forces servos to turn
-	compassstraight(4,40);
+compassstraight(1,63);//get of ramp
+//turnServos(4,0);//forces servos to turn
+compassstraight(4,40);
 
-	compassturn(90);//turn 90 to left
-	compassturn(90);
+compassturn(90);//turn 90 to left
+compassturn(90);
 
-	servo[gate]=gatedown;
-	wait1Msec(1000);
-	compassstraight(1,-27);
-	servo[lock]=lockdown;
-	wait1Msec(100);
-	compassstraight(1,2);
-	servo[lock] = lockup;
-	wait1Msec(100);
-	compassstraight(1,-3);
-	servo[lock] = lockdown;
-	wait1Msec(300);
-	servo[score] = scoreopen;
-	wait1Msec(1000);
+servo[gate]=gatedown;
+wait1Msec(1000);
+compassstraight(1,-27);
+servo[lock]=lockdown;
+wait1Msec(100);
+compassstraight(1,2);
+servo[lock] = lockup;
+wait1Msec(100);
+compassstraight(1,-3);
+servo[lock] = lockdown;
+wait1Msec(300);
+servo[score] = scoreopen;
+wait1Msec(1000);
 
-	//compassstraight(1,48);
-	//	turnServos(3,0);
-	//compassstraight(3,70);
-	compassstraight(1,105);
+//compassstraight(1,48);
+//	turnServos(3,0);
+//compassstraight(3,70);
+compassstraight(1,105);
 
-	compassturn(90);
-	compassturn(45);
-	turnServos(1,0);
+compassturn(90);
+compassturn(45);
+turnServos(1,0);
 
 }
 */
@@ -332,6 +358,7 @@ void program21()
 }
 
 
+
 void program25()
 {
 	turnServos(1,0);//forces servos to turn
@@ -352,7 +379,8 @@ void program25()
 
 void program31()
 {
-
+	int reading1= HTEOPDreadProcessed(eopd1);
+	int reading2= HTEOPDreadProcessed(eopd2);
 	godirection(1,-63);//get of ramp
 
 
@@ -363,25 +391,13 @@ void program31()
 	godirection(1,-38);
 
 	turnServos(2,0);
-	turnGYRO(-43, 40);
+	turnGYRO(-45, 40);
 
 
 	servo[gate]=gatedown;
 	wait1Msec(1000);
-	godirection(1,-28);
-/*	//if the rolling goal is in a certain position,
-	//then we can't get it by going straight
-	//so we have to hit the wall at a diagonal, return to the original position
-	//and hit the wall straight another time again
-	//then we will have it regardless of whatever position it is in
-	godirection(1, 10);
-	turnGYRO(-45, 40);
-	godirection(1, -14);//10*sqrt(2)
-	wait1Msec(50);//let the robot settle
-	godirection(1, -14);
-	turnGYRO(45, 40);
-	godirection(1, -10);//now we have the rolling goal
-	*/
+	godirection(1,-32);
+
 	//while(true);
 	servo[lock]=lockdown;
 	wait1Msec(100);
@@ -391,14 +407,47 @@ void program31()
 	godirection(1,-3);
 	servo[lock] = lockdown;
 	wait1Msec(100);
-	godirection(1,48);
+	//this is the bare minimum amount of times we have to reverse and go forward
+	//if nessecary, we do it more
+	reading1= HTEOPDreadProcessed(eopd1);
+	reading2= HTEOPDreadProcessed(eopd2);
+
+	if(reading1>eopd1threshold && reading1>eopd2threshold)//if not there
+	{
+		while(true)
+		{
+			godirection(1,2);
+			servo[lock] = lockup;
+			wait1Msec(100);
+			godirection(1,-3);
+			servo[lock] = lockdown;
+			wait1Msec(100);
+
+			reading1= HTEOPDreadProcessed(eopd1);
+			reading2= HTEOPDreadProcessed(eopd2);
+
+			if(reading1>eopd1threshold && reading1>eopd2threshold)
+			{
+				break;
+			}
+
+		}
+	}
+
+
+
+
+
+
+	godirection(1,100);
 	//	turnServos(3,0);
-	godirection(3,70);
+	//godirection(3,70);
 
 
 	turnleft90();
 	turnleft45();
 	turnServos(1,0);
+}
 void program22()
 {
 	turnServos(5,0);
@@ -408,6 +457,6 @@ void program22()
 	godirection(5,24*5);
 	turnServos(5,0);
 	godirection(5,-24);
-//	writeDebugStream("Done");
-}
+	//	writeDebugStream("Done");
 
+}
