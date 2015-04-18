@@ -1,9 +1,9 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  none,     none)
 #pragma config(Hubs,  S2, HTMotor,  HTMotor,  HTServo,  HTServo)
-#pragma config(Sensor, S3,     compass,         sensorI2CCustom)
-#pragma config(Sensor, S4,     Mux,            sensorI2CCustom9V)
+#pragma config(Sensor, S3,     eopd1,           sensorI2CCustom)
+#pragma config(Sensor, S4,     eopd2,            sensorI2CCustom)
 #pragma config(Motor,  mtr_S1_C1_1,     RightFront,    tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C1_2,     RightBack,     tmotorTetrix, openLoop,)
+#pragma config(Motor,  mtr_S1_C1_2,     RightBack,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S2_C1_1,     elevator1,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S2_C1_2,     elevator2,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S2_C2_1,     LeftFront,     tmotorTetrix, openLoop, reversed)
@@ -41,49 +41,108 @@
 #define touch msensor_S4_2
 #define HTIRS2 msensor_S4_4
 #define colorport msensor_S4_1
-#define eopd msensor_S4_3
+//#define eopd msensor_S4_3
 
 
-task main()
-{
-	HTEOPDsetShortRange(eopd);
-
+int eopdthreshold1=35;
+int eopdthreshold2=35;
 	int under=0;
 	/*
 	0 means nothing underneath
 	1 means something new underneath
 	2 means something has been underneath
 	*/
-	int eopdthreshold=16;
+int encoders=125;
+int geteopdvalue();
+task movemotordown();
+task movemotorup();
+
+
+
+
+
+task main()
+{
+	HTEOPDsetShortRange(eopd1);
+	HTEOPDsetShortRange(eopd2);
+
+StartTask(movemotordown);
+
+wait1Msec(500);
+StartTask(movemotordown);
+
 
 
 	while(true)
 	{
 
-		nxtDisplayCenteredTextLine(3, "eopd:%d", HTEOPDreadProcessed(eopd));
-	if(HTEOPDreadProcessed(eopd)>eopdthreshold)
-	{
-		under=0;
-	}
-	else if(HTEOPDreadProcessed(eopd)< eopdthreshold && under==0)
-	{
-		under=1;
-	}
-	else
-	{
-		under=2;
-	}
+		//nxtDisplayCenteredTextLine(3, "eopd:%d", HTEOPDreadProcessed(eopd1));
 
-		switch(under)
+
+		switch(geteopdvalue())
 		{
-	case 0:	nxtDisplayCenteredTextLine(4, "Nothing");	break;
-	case 1:	nxtDisplayCenteredTextLine(4, "Something New"); PlaySound(soundBeepBeep); PlaySound(soundBeepBeep); break;
+	case 0:	nxtDisplayCenteredTextLine(4, "Nothing New");	StartTask(movemotordown); break;
+	case 1:	nxtDisplayCenteredTextLine(4, "Something New"); StartTask(movemotorup); break;
 	case 2:	nxtDisplayCenteredTextLine(4, "Something Old");	break;
+	case 3: nxtDisplayCenteredTextLine(4, "Nothing Old");	break;
 	}
 
-	wait1Msec(2000);
+	wait1Msec(400);
 
 	}
 
+
+}
+
+int geteopdvalue()
+{
+nxtDisplayCenteredTextLine(1,"%d::%d::%d", HTEOPDreadProcessed(eopd1),HTEOPDreadProcessed(eopd2), under);
+int reading1= HTEOPDreadProcessed(eopd1);
+int reading2= HTEOPDreadProcessed(eopd2);
+if(reading1>eopdthreshold1 && reading2>eopdthreshold2 && under!=3 && under!=0)
+	{
+		under=0;//nothing new
+	}
+	else if(reading1< eopdthreshold1 && reading2<eopdthreshold2 && (under==0 || under==3)&& under!=1 && under!=2)
+	{
+		under=1;//something new
+	}
+	else if(reading1< eopdthreshold1 && reading2<eopdthreshold2  && (under==1 || under==2))
+	{
+		under=2;//somthing old
+	}
+	else if(reading1> eopdthreshold1 && reading2>eopdthreshold2 &&(under==0 || under==3))
+	{
+		under=3;	//nothing old
+	}
+
+	return under;
+}
+
+
+
+task movemotorup()
+{
+	StopTask(movemotordown);
+	nMotorEncoder[motorB]=0;
+
+	while(nMotorEncoder[motorB]<encoders)
+	{
+		motor[motorB]=100;
+	}
+	motor[motorB]=0;
+
+
+}
+
+task movemotordown()
+{
+	StopTask(movemotorup);
+	nMotorEncoder[motorB]=0;
+	while(nMotorEncoder[motorB]>-encoders)
+	{
+		motor[motorB]=-100;
+	}
+	motor[motorB]=0;
 
 }

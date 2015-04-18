@@ -108,13 +108,13 @@ task main()
 
 		switch(x)
 		{
-	case 1: nxtDisplayCenteredTextLine(5,"Straight"); break;
-	case 2: nxtDisplayCenteredTextLine(5,"Spin");	break;
-	case 3: nxtDisplayCenteredTextLine(5,"45 to Right"); break;
-	case 4: nxtDisplayCenteredTextLine(5,"45 To Left");	break;
-	case 5: nxtDisplayCenteredTextLine(5,"Sideways");	break;
+		case 1: nxtDisplayCenteredTextLine(5,"Straight"); break;
+		case 2: nxtDisplayCenteredTextLine(5,"Spin");	break;
+		case 3: nxtDisplayCenteredTextLine(5,"45 to Right"); break;
+		case 4: nxtDisplayCenteredTextLine(5,"45 To Left");	break;
+		case 5: nxtDisplayCenteredTextLine(5,"Sideways");	break;
 
-	}
+		}
 
 
 	}

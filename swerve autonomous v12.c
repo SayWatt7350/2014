@@ -30,8 +30,14 @@
 
 #define touch msensor_S4_2
 #define HTIRS2 msensor_S4_4
-#define eopd msensor_S4_3
-//#define colorport msensor_S4_1
+#define eopd1 msensor_S4_3
+#define ultrasound msensor_S4_1
+#define eopd2 msensor_S4_1
+#define USING_2_EOPD 1
+
+
+#define NUMBER_OF_PROGRAMS 31
+
 
 
 #include "hitechnic-sensormux.h" //THIS MUST BE THE FIRST #INCLUDE
@@ -41,6 +47,7 @@
 #include "hitechnic-colour-v2.h"
 #include "hitechnic-gyro.h"
 #include "hitechnic-eopd.h"
+#include "lego-ultrasound.h"
 #include "..\..\autonomous variables.h"
 #include "..\..\swerve functions v2.h"
 #include "..\..\swerve autonomous functions.h"
@@ -84,19 +91,16 @@ task main()
 	*/
 	//wait1Msec(2000);
 	//	disableDiagnosticsDisplay();
-	short colorValues[4];//these are the scanned values
 
-	int j;
-	long r;
-	long g;
-	long b;
 	//	wait1Msec(500);
 
-	int minDifference = 32767; // MAX_INT
-	int selectedColor = 0;//this is the color closest to the scanned color
 
 
-	HTEOPDsetShortRange(eopd);
+
+
+
+	HTEOPDsetShortRange(eopd1);
+	HTEOPDsetShortRange(eopd2);
 
 
 
@@ -125,126 +129,64 @@ task main()
 	servo[lock] = lockup;
 	servo[gate] = gateup;
 	servo[mouth]= mouthup;
-	//selectedColor=HTCS2readColor(colorport);
+
 
 	turnServos(1,0);
 
 
 
-	/*clearDebugStream();
-	//while(true)
+
+
+
+
+
+	while(true)
 	{
-	if(!HTCS2readRGB(colorport, r, g,b))
-	{
-		writeDebugStream("BAD\n");
+
+		if(nNxtButtonPressed==1)//move wheel position back
+		{//right button
+
+			selectprgm++;
+			if(selectprgm<0)
+			{
+
+				selectprgm+=(NUMBER_OF_PROGRAMS+1);
+			}
+			if(selectprgm>NUMBER_OF_PROGRAMS)
+			{
+
+				selectprgm-=NUMBER_OF_PROGRAMS;
+			}
+			nxtDisplayCenteredTextLine(2,"program%d",selectprgm);
+
+			wait1Msec(500);
+		}
+		// lower elevator
+		else if(nNxtButtonPressed==2)//move wheel position forward
+		{//left button
+
+			selectprgm--;
+			if(selectprgm<1)
+			{
+
+				selectprgm+=NUMBER_OF_PROGRAMS;
+			}
+			if(selectprgm>5)
+			{
+
+				selectprgm-=NUMBER_OF_PROGRAMS;
+			}
+
+			nxtDisplayCenteredTextLine(2,"program%d",selectprgm);
+			wait1Msec(500);
+		}
+
+		if(nNxtButtonPressed==3)//not tested yet is either 0 or 3 depending on what number the center button is for
+		{
+			break;
+		}
+
 }
-	writeDebugStream("%d, %d, %d\n", r,g,b);
-	//writeDebugStream("----------------\n");
-	wait1Msec(1000);
-}
-
-*/
-	//	wait1Msec(4000);
-	/*
-	3|lightblue//program1
-	3|darkblue
-	5|darkyellow
-	7|pink
-	7|red//program3
-	7|orange
-	13|lightgreen
-	14|white//program11
-	14|tan
-	14|brown
-	14|lightyellow
-	17|purple
-	17|black//default(program15)
-
-
-	*/
-
-	/*	while(true)
-	{
-	for(j =0; j<4; j++)//get color sensor values
-	{
-	//	x=HTCS2readRGB(colorport, r, g,b);
-	//getColorSensorData(colorport, 0, &colorValues[j]);
-	r = colorValues[0];
-	g = colorValues[1];
-	b = colorValues[2];
-	//	writeDebugStream("R:%d,G:%d,B:%d\n",r,g,b);
-	//writeDebugStream("color:%d\n",HTCS2readColor(colorport));
-
-
-	}
-	}*//*
-	for(int x=0; x<10; x++)//test values a couple of times to make sure we have the right one
-	{
-	for(int i = 0; i < COLOR_COUNT; i++)//here we find the closest color in our database
-	{
-
-	difference(//passing in the database values and the scanned values to find the difference
-	colorTags[i][0],
-	colorTags[i][1],
-	colorTags[i][2],
-	r, g, b);
-	long diff = thediff;
-
-	if (diff <= minDifference) {//if the difference between the color in the database that we are currently checking and the scanned color
-	minDifference = diff;			//is less than the smallest difference between the other database colors, then the database color we are
-	selectedColor = i;				//currently checking is the closest match so far
-	}
-
-	nxtDisplayCenteredTextLine(0, "%d, %d", diff, minDifference);//print all the values
-	nxtDisplayCenteredTextLine(1, "%d,%d,%d", colorValues[0], colorValues[1], colorValues[2]);
-	nxtDisplayCenteredTextLine(4, "%d,%d,%d,",	colorTags[i][0], colorTags[i][1], colorTags[i][2]);
-	}
-	}
-	nxtDisplayCenteredTextLine(2, "%s", colornames[selectedColor]);
-	nxtDisplayCenteredTextLine(3, "Is this the color?");
-	if(nNxtButtonPressed==2)
-	{
-	break;
-	}
-	}
-	*/
-
-
-	//	disableDiagnosticsDisplay();
-	//	eraseDisplay();
-
-	switch(selectedColor)
-	{
-	case 1:
-	case 7:
-		nxtDisplayCenteredTextLine(1,"RED");
-		break;
-	case 8:
-		break;
-	case 9:
-		break;
-	case 10:
-		break;
-	case 11:
-		break;
-	case 12:
-		break;
-	case 13:
-		break;
-	case 14:
-		nxtDisplayCenteredTextLine(1,"WHITE");
-		break;
-	case 15:
-		break;
-	case 16:
-		break;
-	case 17:nxtDisplayCenteredTextLine(1,"BLACK");
-		break;
-	default:
-		nxtDisplayCenteredTextLine(1,"BLACK");
-		break;
-	}
-
 
 	turnServos(1,0);
 
@@ -258,52 +200,41 @@ task main()
 
 
 
-	/*
-
-	switch(selectedColor)
-	{
-	case 1:
-	break;
-	case 2:
-	break;
-	case 3:
-	program1();
-	break;
-	case 4:
-	break;
-	case 5:
-	break;
-	case 6:
-	break;
-	case 7:
-	writeDebugStream("7");
-	program3();
-	break;
-	case 8:
-	break;
-	case 9:
-	break;
-	case 10:
-	break;
-	case 11:
-	break;
-	case 12:
-	break;
-	case 13:
-	break;
-	case 14:
-	program11();
-	break;
-	case 15:
-	break;
-	case 16:
-	break;
-	program15();
-	break;
-	default:
-	program15();
-	break;
-	*/
+switch(selectprgm)
+		{
+		case 1: program1(); break;
+		case 2: program2();	break;
+		//case 3: program3(); break;
+		//case 4: program4();	break;
+		//case 5: program5();	break;
+		//case 6: program6();	break;
+		//case 7: program7();	break;
+		//case 8: program8();	break;
+		case 9: program9();	break;
+		case 10: program10();	break;
+		//case 11: program11();	break;
+		case 12: program12();	break;
+		//case 13: program13();	break;
+		//case 14: program14();	break;
+		case 15: program15();	break;
+		//case 16: program16();	break;
+		//case 17: program17();	break;
+		//case 18: program18();	break;
+		//case 19: program19();	break;
+		//case 20: program20();	break;
+		case 21: program21();	break;
+		case 22: program22();	break;
+		//case 23: program23();	break;
+		//case 24: program24();	break;
+		//case 25: program25();	break;
+		//case 26: program26();	break;
+		//case 27: program27();	break;
+		//case 28: program28();	break;
+		//case 29: program29();	break;
+		//case 30: program30();	break;
+		case 31: program31();	break;
+		default: program15(); break;
+		}
 
 	//program1();
 

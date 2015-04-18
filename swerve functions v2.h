@@ -1,3 +1,17 @@
+int eopdthreshold1=1;
+int eopdthreshold2=1;
+int under=0;
+/*
+0 means nothing underneath
+1 means something new underneath
+2 means something has been underneath
+*/
+int encoders=125;
+int geteopdvalue();
+task movemotordown();
+task movemotorup();
+
+
 //  Team 7350 - swerve code
 //
 //   turnServos will turn the servos to one of five positions, then wait 150ms to adjust if lastpos is different then intended position.
@@ -13,23 +27,23 @@ void turnServos(int turnpos, int lastpos)
 {
 
 	int FRStraight = 161;
-	int BRStraight = 68;
-	int FLStraight = 158;
+	int BRStraight = 53;
+	int FLStraight = 172;
 	int BLStraight = 189;
 
 	int FRLeft = 107;
 	int BRLeft = 20;   // not quite
-	int FLLeft = 100;
+	int FLLeft = 109;
 	int BLLeft = 113;
 
 	int FRRight = 219;
-	int BRRight = 147;
-	int FLRight = 209;
+	int BRRight = 133;
+	int FLRight = 255;
 	int BLRight = 220;// not quite
 
 	int FRSide = 49;
-	int BRSide = 255;
-	int FLSide = 41;
+	int BRSide = 211;
+	int FLSide = 52;
 	int BLSide = 23;
 	/*
 	servoChangeRate[RightFront]=1;
@@ -145,4 +159,93 @@ void turnServos(int turnpos, int lastpos)
 
 	lastpos = turnpos;
 	return;
+}
+
+
+
+
+
+int geteopdvalue()
+{
+	nxtDisplayCenteredTextLine(2,"%d::%d::%d::%d", HTEOPDreadProcessed(eopd1),HTEOPDreadProcessed(eopd2), under,USING_2_EOPD);
+	int reading1= HTEOPDreadProcessed(eopd1);
+	int reading2= 0;
+	if(USING_2_EOPD)
+	{
+		reading2= HTEOPDreadProcessed(eopd2);
+	}
+
+
+
+	if(USING_2_EOPD==1)
+	{
+		if(reading1>eopdthreshold1 && reading2>eopdthreshold2 && under!=3 && under!=0)
+		{
+			under=0;//nothing new
+		}
+		else if(reading1< eopdthreshold1 && reading2<eopdthreshold2 && (under==0 || under==3)&& under!=1 && under!=2)
+		{
+			under=1;//something new
+		}
+		else if(reading1< eopdthreshold1 && reading2<eopdthreshold2  && (under==1 || under==2))
+		{
+			under=2;//somthing old
+		}
+		else if(reading1> eopdthreshold1 && reading2>eopdthreshold2 &&(under==0 || under==3))
+		{
+			under=3;	//nothing old
+		}
+	}
+
+	if(USING_2_EOPD==0)
+	{
+		if(reading1>eopdthreshold1 && under!=3 && under!=0)
+		{
+			under=0;//nothing new
+		}
+		else if(reading1< eopdthreshold1 && (under==0 || under==3)&& under!=1 && under!=2)
+		{
+			under=1;//something new
+		}
+		else if(reading1< eopdthreshold1 && (under==1 || under==2))
+		{
+			under=2;//somthing old
+		}
+		else if(reading1> eopdthreshold1 &&(under==0 || under==3))
+		{
+			under=3;	//nothing old
+		}
+	}
+
+
+
+	return under;
+}
+
+
+
+task movemotorup()
+{
+	StopTask(movemotordown);
+	nMotorEncoder[motorB]=0;
+
+	while(nMotorEncoder[motorB]<encoders)
+	{
+		motor[motorB]=100;
+	}
+	motor[motorB]=0;
+
+
+}
+
+task movemotordown()
+{
+	StopTask(movemotorup);
+	nMotorEncoder[motorB]=0;
+	while(nMotorEncoder[motorB]>-encoders)
+	{
+		motor[motorB]=-100;
+	}
+	motor[motorB]=0;
+
 }
