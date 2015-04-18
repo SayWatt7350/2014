@@ -268,9 +268,9 @@ task main()
 	turnServos(1,0);
 
 
-	//wait1Msec(5000);
-//	PlaySound(soundBeepBeep);
-//	PlaySound(soundBeepBeep);
+//	wait1Msec(5000);
+	PlaySound(soundBeepBeep);
+	PlaySound(soundBeepBeep);
 
 	//		waitForStart();
 	servo[gate]=gatedrive;

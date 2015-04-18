@@ -124,10 +124,11 @@ void program2()
 
 void program9()//knocks from parking
 {
-	godirection(1,14);
-	getcenterpospark();
+	godirection(1,20);			// drive forward so get better veiw of IR b eacon
+	wait1Msec(100);				// let sensor settle
+	getcenterpospark();   // use IR sensor to find position of goal
 	//	centerpos=4;
-	StartTask(movefrom0to120);
+	//	StartTask(movefrom0to120);
 	//Testing Ultrasound
 	//	nxtDisplayCenteredTextLine(2,"Parking");
 
@@ -139,65 +140,69 @@ void program9()//knocks from parking
 		turnGYRO(90,90);
 		turnGYRO(90,90);
 		wait1Msec(100);
-		godirection(5,9);
-		wait1Msec(100);
-		godirection(1,-8);
+		servo[gate]=gateup;		// so doesn't jam on center goal
+		wait1Msec(500);
+		godirection(1,-4);  // flipped around too far
+//		godirection(5,9);
+//		wait1Msec(100);
 		lineupcenter();
-		while (!finished)
-	{
+//		godirection(1,-4);
+//		while (!finished)
+//	{
 	//				Elevator Raise Check
-	}
+//	}
 		//
-		wait1Msec(1000);
-		godirection(5,-10);
-		godirection(1,-25);
+		godirection(5,3);  //fOUND EDGE, GO A LITTLE FURTHWER
+/*		godirection(1,-25);
 		godirection(1,25);
 		godirection(1,-25);
-
+*/
 	}
 	else if(centerpos==2)
 	{
-		writeDebugStreamLine("Position 2");
-
+	writeDebugStreamLine("Position 2");
+/*
 		godirection(1,12);
 		turnGYRO(45,90);
 		godirection(1,15);
 		turnGYRO(90,90);
 		godirection(1,-8);
 		lineupcenter();
-		while (!finished)
-	{
+//		while (!finished)
+//	{
 	//				Elevator Raise Check
-	}
+//	}
 		//
 		wait1Msec(1000);
 		godirection(5,-8);
 		godirection(1,-25);
 		godirection(1,25);
 		godirection(1,-25);
-
+*/
 	}
 	else if(centerpos==3) //Change back to POS 3
 	{
 		writeDebugStreamLine("Position 3");
-
+/*
 		godirection(1,12);
 		turnGYRO(50,90);
 		godirection(1,50);
 		turnGYRO(40,90);
 		godirection(1,-8);
 		lineupcenter();
-		while (!finished)
-	{
+//		while (!finished)
+//	{
 	//				Elevator Raise Check
-	}
+//	}
 		//
 		wait1Msec(1000);
+		godirection(1,5);
 		godirection(5,-8);
-		godirection(1,-25);
-		godirection(1,25);
-		godirection(1,-25);
-
+		wait1Msec(100);
+		godirection(1,-30);
+		godirection(1,30);
+		godirection(1,-30);
+*/
 	}
 	/*	else if (centerpos==4)//Not Possible unless set at beginning of Function
 	{
