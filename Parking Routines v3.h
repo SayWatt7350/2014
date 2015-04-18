@@ -122,13 +122,14 @@ void program2()
 
 
 
-void program9()//knocks dowgetickstand from parking
+void program9()//knocks from parking
 {
 	godirection(1,14);
 	getcenterpospark();
-//	StartTask(movefrom0to120);
-//	centerpos=4; //Testing Ultrasound
-//	nxtDisplayCenteredTextLine(2,"Parking");
+	//	centerpos=4;
+	StartTask(movefrom0to120);
+	//Testing Ultrasound
+	//	nxtDisplayCenteredTextLine(2,"Parking");
 
 	if(centerpos==1)
 	{
@@ -141,12 +142,12 @@ void program9()//knocks dowgetickstand from parking
 		godirection(5,9);
 		wait1Msec(100);
 		godirection(1,-8);
-//		lineupcenter();
-//    while (!finished)
-//			}
-//				Elevator Raise Check
-//			{
-//
+		lineupcenter();
+		while (!finished)
+	{
+	//				Elevator Raise Check
+	}
+		//
 		wait1Msec(1000);
 		godirection(5,-10);
 		godirection(1,-25);
@@ -163,12 +164,12 @@ void program9()//knocks dowgetickstand from parking
 		godirection(1,15);
 		turnGYRO(90,90);
 		godirection(1,-8);
-//		lineupcenter();
-//    while (!finished)
-//			}
-//				Elevator Raise Check
-//			{
-//
+		lineupcenter();
+		while (!finished)
+	{
+	//				Elevator Raise Check
+	}
+		//
 		wait1Msec(1000);
 		godirection(5,-8);
 		godirection(1,-25);
@@ -176,7 +177,7 @@ void program9()//knocks dowgetickstand from parking
 		godirection(1,-25);
 
 	}
-	else if(centerpos==3)
+	else if(centerpos==3) //Change back to POS 3
 	{
 		writeDebugStreamLine("Position 3");
 
@@ -185,12 +186,12 @@ void program9()//knocks dowgetickstand from parking
 		godirection(1,50);
 		turnGYRO(40,90);
 		godirection(1,-8);
-//		lineupcenter();
-//    while (!finished)
-//			}
-//				Elevator Raise Check
-//			{
-//
+		lineupcenter();
+		while (!finished)
+	{
+	//				Elevator Raise Check
+	}
+		//
 		wait1Msec(1000);
 		godirection(5,-8);
 		godirection(1,-25);
@@ -198,10 +199,34 @@ void program9()//knocks dowgetickstand from parking
 		godirection(1,-25);
 
 	}
-	else if (centerpos==4)//Not Possible unless set at beginning of Function
+	/*	else if (centerpos==4)//Not Possible unless set at beginning of Function
 	{
-		lineupcenter();
+	PlaySound(soundBlip);
+	writeDebugStreamLine("Testing Initiated");
+	int foundUltrasound = 0;
+	disableDiagnosticsDisplay();
+	eraseDisplay();
+	while (true)
+	{
+	nxtDisplayCenteredBigTextLine(2, "Sonar");
+	nxtDisplayBigStringAt(25, 25,"%d",ultrasound);
+	wait1Msec(100);
+	/*
+
+	if(ultrasound < 20)
+	{
+	PlaySound(soundBeepBeep);
+	writeDebugStreamLine("Found Something");
+	wait1Msec(500);
+	foundUltrasound = 1;
 	}
+	else
+	{
+	writeDebugStreamLine("Not finding anything");
+	wait1Msec(1000);
+	}
+	}
+	}*/
 }
 
 void program10()
@@ -219,11 +244,11 @@ void program10()
 		wait1Msec(200);
 		godirection(1,28);
 		turnleft90();
-//		StartTask(movefrom0to120);
-//		while (!finished)
-//		{
-//			writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Checks if task is in progress
-//		}
+		//		StartTask(movefrom0to120);
+		//		while (!finished)
+		//		{
+		//			writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Checks if task is in progress
+		//		}
 		turnServos(1,0);
 		godirection(1,1);
 		godirection(1,-1);
@@ -242,11 +267,11 @@ void program10()
 		turnleft90();
 		turnleft45();
 		godirection(1,-10);
-//		StartTask(movefrom0to120);
-//		while (!finished)
-//		{
-//			writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Testing
-//		}
+		//		StartTask(movefrom0to120);
+		//		while (!finished)
+		//		{
+		//			writeDebugStreamLine("Im Doing Something... Please Try Again Later"); //Testing
+		//		}
 		turnServos(1,0);
 		wait1Msec(500);
 		godirection(1,1);
@@ -273,10 +298,10 @@ void program10()
 		godirection(1,5);
 		StartTask(movefrom0to120);
 		while (!finished)
-//		{
-//			writeDebugStreamLine("Im Doing Something");
-//			writeDebugStreamLine("Im Doing Something"); //Checks if Task is done - Temp for testing
-//		}
+			//		{
+		//			writeDebugStreamLine("Im Doing Something");
+		//			writeDebugStreamLine("Im Doing Something"); //Checks if Task is done - Temp for testing
+		//		}
 		turnServos(1,0);
 		wait1Msec(500);
 		godirection(1,1);
@@ -447,14 +472,14 @@ void program31()
 	turnServos(1,0);
 
 }
-	void program22()
-	{
-		turnServos(5,0);
-		godirection(5,24);
-		turnServos(1,0);
-		wait1Msec(1000);
-		godirection(5,24*5);
-		turnServos(5,0);
-		godirection(5,-24);
-		//	writeDebugStream("Done");
-	}
+void program22()
+{
+	turnServos(5,0);
+	godirection(5,24);
+	turnServos(1,0);
+	wait1Msec(1000);
+	godirection(5,24*5);
+	turnServos(5,0);
+	godirection(5,-24);
+	//	writeDebugStream("Done");
+}

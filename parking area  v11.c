@@ -269,8 +269,8 @@ task main()
 
 
 	//wait1Msec(5000);
-	PlaySound(soundBeepBeep);
-	PlaySound(soundBeepBeep);
+//	PlaySound(soundBeepBeep);
+//	PlaySound(soundBeepBeep);
 
 	//		waitForStart();
 	servo[gate]=gatedrive;
