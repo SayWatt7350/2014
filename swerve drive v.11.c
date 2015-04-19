@@ -51,7 +51,63 @@
 
 
 
+int straight_FRS = 161;
+int straight_BRS = 131;
+int straight_FLS = 110;
+int straight_BLS = 134;
 
+
+
+//  mandible servo positions
+//
+int openwideR = 255;
+int openwideL = 0;
+int shutR =0;
+int shutL = 255;
+int outL=150;
+int outR=80;
+//  mouth
+int mouthup=60;
+int mouthdown=210;//214
+int mouthjiggle=76;
+//
+int elevatorposition=0;
+int uppositionscore=62;
+int downpositionscore= 5;
+// gate
+int gateup = 25;
+//int gatedrive = 50;
+int gatedrive=25;
+int gatedown = 255;
+//
+int lockup = 0;
+int lockdown = 138;
+//
+int scoreopen = 5;
+int scoreclose = 150;
+
+int FRS =0;
+int BRS = 0;
+int FLS  = 0;
+int BLS = 0;
+
+int correction=0;//correction for left motor
+
+int finished=1;
+
+task jiggle()
+{
+	finished=0;
+	servo[rightmandible] = outR;  // open mandibles so they don't hit elevator
+	servo[leftmandible] = outL;
+
+	//servoChangeRate[mouth] = 1;
+	servo[mouth]=mouthup;
+	wait1Msec(200);
+	servo[mouth]=mouthjiggle;
+	servoChangeRate[mouth] = 10;
+	finished=1;
+}
 
 task main()
 {
@@ -64,47 +120,6 @@ task main()
 	//
 	//  going straight
 	//
-	int straight_FRS = 161;
-	int straight_BRS = 131;
-	int straight_FLS = 110;
-	int straight_BLS = 134;
-
-
-
-	//  mandible servo positions
-	//
-	int openwideR = 0;
-	int openwideL = 255;
-	int shutR = 220;
-	int shutL = 0;
-	int outL=150;
-	int outR=80;
-	//  mouth
-	int mouthup=60;
-	int mouthdown=200;//214
-	int mouthjiggle=74;
-	//
-	int elevatorposition=0;
-	int uppositionscore=62;
-	int downpositionscore= 5;
-	// gate
-	int gateup = 25;
-	//int gatedrive = 50;
-	int gatedrive=25;
-	int gatedown = 255;
-	//
-	int lockup = 0;
-	int lockdown = 138;
-	//
-	int scoreopen = 5;
-	int scoreclose = 245;
-
-	int FRS =0;
-	int BRS = 0;
-	int FLS  = 0;
-	int BLS = 0;
-
-	int correction=0;//correction for left motor
 
 
 	HTEOPDsetLongRange(eopd1);
@@ -226,7 +241,7 @@ task main()
 
 		// Mouth controls
 
-		if(joy1Btn(4))
+		if(joy1Btn(4) )
 		{
 			servoChangeRate[mouth] = 10;
 			servo[mouth]=mouthup;
@@ -235,33 +250,38 @@ task main()
 			servo[rightmandible] = outR;  // open mandibles so they don't hit elevator
 			servo[leftmandible] = outL;
 		}
-		if(joy1Btn(2))
+		if(joy1Btn(2) || joy2Btn(7))
 		{
 			servoChangeRate[mouth] = 30;
 			servo[mouth]=mouthdown;
-			servo[rightmandible] = openwideR;
-			servo[leftmandible] = openwideL;
+			servo[rightmandible] = shutR;
+			servo[leftmandible] = shutL;
 		}
 
 		//jiggle the mouth
-		if(joy1Btn(3))
-		{
+		if(joy1Btn(3) || joy2Btn(5))
+		{/*
 			servo[rightmandible] = outR;  // open mandibles so they don't hit elevator
 			servo[leftmandible] = outL;
 
-			servoChangeRate[mouth] = 1;
-			servo[mouth]=mouthjiggle;
-			wait1Msec(300);
+			//servoChangeRate[mouth] = 1;
 			servo[mouth]=mouthup;
 			wait1Msec(300);
+			servo[mouth]=mouthjiggle;
 			servoChangeRate[mouth] = 10;
+			*/
+			if(finished)
+			{
+			StartTask(jiggle);
+		}
+
 		}
 
 
 		/////////////    JOYSTICK 2 //////////////////
 
 		//  elevator controls
-
+/*
 		if((joystick.joy2_y2) > threshold )
 		{
 			servo[mouth]=mouthdown;
@@ -286,6 +306,7 @@ task main()
 			motor[elevator1]=0;
 			motor[elevator2]=0;
 		}
+		*/
 
 		//scoring
 		if(joy2Btn(8))

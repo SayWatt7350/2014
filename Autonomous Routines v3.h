@@ -381,6 +381,11 @@ void program31()
 {
 	int reading1= HTEOPDreadProcessed(eopd1);
 	int reading2= HTEOPDreadProcessed(eopd2);
+	int turncount=0;
+
+
+	turnServos(1,0);
+
 	godirection(1,-63);//get of ramp
 
 
@@ -388,64 +393,110 @@ void program31()
 
 	turnServos(1,0);
 	wait1Msec(100);
-	godirection(1,-38);
+	godirection(1,-32);//now we are in front of goal
 
 	turnServos(2,0);
-	turnGYRO(-45, 40);
+	turnGYRO(-48, 40);
 
 
 	servo[gate]=gatedown;
 	wait1Msec(1000);
-	godirection(1,-32);
+	godirection(1,-42);//ram the goal
 
-	//while(true);
+	//move back and forth to make sure we have goal
 	servo[lock]=lockdown;
-	wait1Msec(100);
-	godirection(1,2);
-	servo[lock] = lockup;
-	wait1Msec(100);
-	godirection(1,-3);
-	servo[lock] = lockdown;
-	wait1Msec(100);
-	//this is the bare minimum amount of times we have to reverse and go forward
-	//if nessecary, we do it more
-	reading1= HTEOPDreadProcessed(eopd1);
-	reading2= HTEOPDreadProcessed(eopd2);
 
+
+	reading1= HTEOPDreadProcessed(eopd1);//get eopd values
+	reading2= HTEOPDreadProcessed(eopd2);
 	if(reading1>eopd1threshold && reading1>eopd2threshold)//if not there
 	{
+			wait1Msec(100);
+	godirection(1,8);
+	servo[lock] = lockup;
+	wait1Msec(100);
+	turnGYRO(-30,30);
+	godirection(1,-15);
+	servo[lock] = lockdown;
+	wait1Msec(100);
+	godirection(1,15);
+	turnGYRO(25,30);
+
+	godirection(1,-20);
+}
+
+
+if(reading1>eopd1threshold && reading1>eopd2threshold)//if not there
+{
+return;
+}
+
+
+distance=1300;
+StartTask(moveelevator);
+
+while(!finished);
+
+servo[score]=scoreopen;
+
+wait1Msec(1500);
+
+	//this is the bare minimum amount of times we have to reverse and go forward
+	//if nessecary, we do it more
+	reading1= HTEOPDreadProcessed(eopd1);//get eopd values
+	reading2= HTEOPDreadProcessed(eopd2);
+/*
+	if(reading1>eopd1threshold && reading1>eopd2threshold)//if not there
+	{
+		writeDebugStream("working\n");
 		while(true)
 		{
-			godirection(1,2);
+
+
+
+			godirection(1,9);
 			servo[lock] = lockup;
 			wait1Msec(100);
-			godirection(1,-3);
+			godirection(1,-10);
 			servo[lock] = lockdown;
 			wait1Msec(100);
 
 			reading1= HTEOPDreadProcessed(eopd1);
 			reading2= HTEOPDreadProcessed(eopd2);
 
-			if(reading1>eopd1threshold && reading1>eopd2threshold)
+			if(reading1<eopd1threshold && reading1<eopd2threshold)
 			{
+
+			writeDebugStream("%d::%d\n", reading1, reading2);
+				writeDebugStream("working\n");
 				break;
 			}
+
+			turncount++;
+			turnright5();
 
 		}
 	}
 
 
+while(turncount>0)
+{
+turncount--;
+turnleft5();
+//godirection(5,-2);
+}
+*/
 
 
-
-
-	godirection(1,100);
+	godirection(1,58);
 	//	turnServos(3,0);
 	//godirection(3,70);
-
+turnGYRO(-30,60);
+godirection(1,50);
 
 	turnleft90();
-	turnleft45();
+	turnright90();
+
 	turnServos(1,0);
 }
 void program22()

@@ -76,7 +76,7 @@ StartTask(movemotordown);
 	while(true)
 	{
 
-		//nxtDisplayCenteredTextLine(3, "eopd:%d", HTEOPDreadProcessed(eopd1));
+		nxtDisplayCenteredTextLine(3, "eopd1:%d", HTEOPDreadProcessed(eopd1));
 
 
 		switch(geteopdvalue())

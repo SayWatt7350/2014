@@ -264,6 +264,9 @@ void getcenterpospark()//returns center piece position when robot is in parking 
 
 	HTIRS2readAllACStrength(HTIRS2, acS1, acS2, acS3, acS4, acS5);//used to get ir sensor values
 
+	writeDebugStream("%d, %d, %d, %d, %d\n", acS1, acS2, acS3, acS4, acS5);
+
+
 	if(acS3>irthreshold1)//finding position of centerpiece
 	{
 		centerpos=2;
@@ -772,3 +775,73 @@ void lineupcenter()//robot should start with ultrasound facing the
 
 
 }*/
+
+
+
+
+void turnright5()//turn 5 degrees right
+{
+	turnServos(2,lastservopos);
+
+	int speed=50;
+	int clicks=(1440*3*PI/8)/18;
+
+	nMotorEncoder[RightBack] = 0;
+	nMotorEncoder[RightFront] = 0;
+	nMotorEncoder[LeftBack] = 0;
+	nMotorEncoder[LeftFront] = 0;
+	while(nMotorEncoder[RightBack] < clicks && nMotorEncoder[LeftFront] < clicks)
+	{
+		motor[RightFront] = speed;
+		motor[RightBack] = speed;
+		motor[LeftFront] = -speed;
+		motor[LeftBack] = -speed;
+	}
+	motor[RightFront] = 0;
+	motor[RightBack] = 0;
+	motor[LeftFront] = 0;
+	motor[LeftBack] = 0;
+
+
+}
+
+
+
+void turnleft5()//turn 5 degrees left
+{
+	turnServos(2,lastservopos);
+
+	int speed=50;
+	int clicks=(1440*3*PI/8)/18;
+
+	nMotorEncoder[RightBack] = 0;
+	nMotorEncoder[RightFront] = 0;
+	nMotorEncoder[LeftBack] = 0;
+	nMotorEncoder[LeftFront] = 0;
+	while(nMotorEncoder[RightBack] < clicks && nMotorEncoder[LeftFront] < clicks)
+	{
+		motor[RightFront] = speed;
+		motor[RightBack] = speed;
+		motor[LeftFront] = -speed;
+		motor[LeftBack] = -speed;
+	}
+	motor[RightFront] = 0;
+	motor[RightBack] = 0;
+	motor[LeftFront] = 0;
+	motor[LeftBack] = 0;
+
+
+}
+
+
+task moveelevatordown()
+{
+	while(TSreadState(touch)==0)
+	{
+		motor[elevator1]=-100;
+		motor[elevator2]=-100;
+}
+
+motor[elevator1]=0;
+		motor[elevator2]=0;
+}

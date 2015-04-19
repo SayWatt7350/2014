@@ -40,7 +40,7 @@ int lockup = 0;
 int lockdown = 85;
 //
 int scoreopen = 5;
-int scoreclose = 245;
+int scoreclose = 150;
 
 int FRS =0;
 int BRS = 0;

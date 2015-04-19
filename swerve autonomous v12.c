@@ -48,6 +48,7 @@
 #include "hitechnic-gyro.h"
 #include "hitechnic-eopd.h"
 #include "lego-ultrasound.h"
+#include "lego-touch.h"
 #include "..\..\autonomous variables.h"
 #include "..\..\swerve functions v2.h"
 #include "..\..\swerve autonomous functions.h"
@@ -129,21 +130,19 @@ task main()
 	servo[lock] = lockup;
 	servo[gate] = gateup;
 	servo[mouth]= mouthup;
-
+StartTask(moveelevatordown);
 
 	turnServos(1,0);
 
 
 
-
-
-
+nxtDisplayCenteredTextLine(2,"program%d",selectprgm);
 
 
 	while(true)
 	{
 
-		if(nNxtButtonPressed==1)//move wheel position back
+		if(nNxtButtonPressed==1)//move program back
 		{//right button
 
 			selectprgm++;
@@ -162,7 +161,7 @@ task main()
 			wait1Msec(500);
 		}
 		// lower elevator
-		else if(nNxtButtonPressed==2)//move wheel position forward
+		else if(nNxtButtonPressed==2)//move program forward
 		{//left button
 
 			selectprgm--;
@@ -171,7 +170,7 @@ task main()
 
 				selectprgm+=NUMBER_OF_PROGRAMS;
 			}
-			if(selectprgm>5)
+			if(selectprgm>NUMBER_OF_PROGRAMS)
 			{
 
 				selectprgm-=NUMBER_OF_PROGRAMS;
@@ -181,8 +180,9 @@ task main()
 			wait1Msec(500);
 		}
 
-		if(nNxtButtonPressed==3)//not tested yet is either 0 or 3 depending on what number the center button is for
+		if(nNxtButtonPressed==3)
 		{
+
 			break;
 		}
 
@@ -197,6 +197,7 @@ task main()
 
 //		waitForStart();
 	servo[gate]=gatedrive;
+
 
 
 
@@ -245,7 +246,7 @@ switch(selectprgm)
 	//program1();
 	//turnServos(2,0);
 	//wait1Msec(5000);
-	program9();
+
 
 
 

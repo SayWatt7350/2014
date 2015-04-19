@@ -1,5 +1,5 @@
-int eopdthreshold1=1;
-int eopdthreshold2=1;
+int eopdthreshold1=10;
+int eopdthreshold2=10;
 int under=0;
 /*
 0 means nothing underneath
@@ -167,7 +167,7 @@ void turnServos(int turnpos, int lastpos)
 
 int geteopdvalue()
 {
-	nxtDisplayCenteredTextLine(2,"%d::%d::%d::%d", HTEOPDreadProcessed(eopd1),HTEOPDreadProcessed(eopd2), under,USING_2_EOPD);
+	//nxtDisplayCenteredTextLine(2,"%d::%d::%d::%d", HTEOPDreadProcessed(eopd1),HTEOPDreadProcessed(eopd2), under,USING_2_EOPD);
 	int reading1= HTEOPDreadProcessed(eopd1);
 	int reading2= 0;
 	if(USING_2_EOPD)
